@@ -73,9 +73,16 @@ def get_system_info():
         
     try:
         # FETCH MOTHERBOARD SERIAL NUMBER
-        command = "sudo dmidecode -t baseboard | grep Serial"
-        serial_number = subprocess.check_output(command, shell=True).decode().split(':')[1].strip()
-        system_info['serial_number'] = serial_number
+        
+        if platform.system() == "Linux":
+            command = "sudo dmidecode -t baseboard | grep Serial"
+            serial_number = subprocess.check_output(command, shell=True).decode().split(':')[1].strip()
+            system_info['serial_number'] = serial_number
+        elif platform.system() == "Darwin":
+            command = "system_profiler SPHardwareDataType | grep 'Serial Number (system)'"
+            serial_number = subprocess.check_output(command, shell=True).decode().split(':')[1].strip()
+            system_info['serial_number'] = serial_number
+            
     
     except Exception as e:
         system_info['error_serial'] = str(e)
@@ -184,22 +191,25 @@ async def main():
     
     # TO GIVE THE OUTPUT VALUE TO THE GAME MANAGER, WE NEED TO FIRST CREATE A GAME MANAGER CLIENT AND DEPLOY IT, SO WE CAN USE ITS PARTY_ID
     compute_bindings.add_output_party(GAME_MANAGER_PARTY, party_id)
+    
+    # DEINE COMPUTATIONAL TIME SECRETS BECAUSE .compute FUNCTRIN HAS A BUG !! FUCK IT 
+    COMPUTE_SECRETS = nillion.NadaValues({})
 
     # PAY FOR THE COMPUTATION
     receipt_compute = await get_quote_and_pay(
         player,
-        nillion.Operation.compute(program_id),
+        nillion.Operation.compute(program_id, COMPUTE_SECRETS),
         payments_wallet,
         payments_client,
         cluster_id,
     )
-    
+        
     # COMPUTE BY SHOWING THE RECEIPT OF THE PAYMENT OF THE COMPTATION
     compute_id = await player.compute(
         cluster_id,
         compute_bindings,
         [store_id],
-        None,        # NO COMPUTATION TIME SECRETS 
+        COMPUTE_SECRETS,         
         receipt_compute,
     )
 
