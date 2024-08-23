@@ -1,0 +1,8 @@
+name = "nada_quickstart_programs"
+version = "0.1.0"
+authors = [""]
+
+[[programs]]
+path = "src/addition.py"
+name = "addition"
+prime_size = 128
