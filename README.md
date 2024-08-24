@@ -1,7 +1,20 @@
 # eth-watchdog
 
 Needed commands: 
+Note: You stll need to run this, even if you are using gitpod
 
+Step 1: Clone the Repository/ Open this repository using gitpod:
+For opening this repository using gitpod, search this in url:
+```
+https://gitpod.io/new/#https://github.com/aaravm/eth-watchdog
+```
+
+Step 2: open the nillion-python-starter folder using:
+```
+cd nillion-python-starter/
+```
+
+Step 3: Install Nillion and its dependencies:
 ```bash
 curl https://nilup.nilogy.xyz/install.sh | bash
 ```

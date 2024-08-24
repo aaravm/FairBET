@@ -10,3 +10,4 @@ quickstart_complete/nada_quickstart_programs/target
 *.key
 
 .venv
+../.venv
