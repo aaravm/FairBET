@@ -34,12 +34,12 @@ pip install --upgrade -r requirements.txt
 
 For compiling the nada file, run this in the same dir as nada.toml
 ```
-pip install --upgrade -r requirements.txt
+nada build
 ```
 
 Spinning up local devnet 
 ```
-pip install --upgrade -r requirements.txt
+nillion-devnet
 ```
 
 To run the client-code, go the respective directory and run: 
