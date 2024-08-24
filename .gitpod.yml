@@ -25,7 +25,7 @@ tasks:
       source /home/gitpod/.bashrc && export PATH=$PATH:/home/gitpod/.nilup/sdks/latest
       nillion -V
       pip install --upgrade pip
-      pip install -r nillion-python-starter/requirements.txt
+      pip install -r requirements.txt
       cd quickstart/nada_quick_start_programs
       nada build
       cd ..
