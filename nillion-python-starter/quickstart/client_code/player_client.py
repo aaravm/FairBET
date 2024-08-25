@@ -6,10 +6,11 @@ import psutil
 import platform 
 import subprocess
 import hashlib
+import json
 
 from py_nillion_client import NodeKey, UserKey
 from dotenv import load_dotenv
-from nillion_python_helpers import create_nillion_client, create_payments_config
+from nillion_python_helpers import get_quote_and_pay, create_nillion_client, create_payments_config
 
 from cosmpy.aerial.client import LedgerClient
 from cosmpy.aerial.wallet import LocalWallet
@@ -84,6 +85,8 @@ def get_system_info():
 
 async def main():
     
+    PLAYER_ALIAS = "PLAYER1"
+    
     # GET NILLION-DEVNET CREDENTIALS
     cluster_id = os.getenv("NILLION_CLUSTER_ID")
     grpc_endpoint = os.getenv("NILLION_NILCHAIN_GRPC")
@@ -98,6 +101,10 @@ async def main():
     # REDUNDANT CODE: WE ONLY NEED THESE THINGS WHILE INTERACTING WITH THE NETWORK 
     party_id = player.party_id
     user_id = player.user_id    
+    
+    # with open("credential_store.json", "r") as f:
+    #     game = json.load(f)
+    #     PROGRAM_CREDS = game["ADDITION"]
     
     
     # CREATE THE PAYMENTS CONFIG, SET UP NILLION WALLET etc.
@@ -119,11 +126,57 @@ async def main():
     sn_int = string_to_int(serial_number)
     
     
+    NEW_SECRETS = nillion.NadaValues(
+        {
+            "SECRET1": nillion.SecretInteger(sn_int),
+            "SECRET2": nillion.SecretInteger(20)        # FIXME: REPLACE THIS 20 WITH WALLET_ADDR_INT
+        }
+    )
     
-    # MOST IMPORT THING IN THE WHOLE CLIENT CODE
-    with open(".env.manager", "w") as f:
-        f.write(f"PLAYER_SERIAL_NUMBER={sn_int}\n")
-        f.write(f"PLAYER_WALLET_ADDRESS={wallet_addr_int}")
+    id = f'{user_id}/addition'
+    
+    permissions = nillion.Permissions.default_for_user(player.user_id)    
+    permissions.add_compute_permissions(
+        {
+            player.user_id: {id}
+        }
+    )
+    
+    receipt_store = await get_quote_and_pay(
+        player,
+        nillion.Operation.store_values(NEW_SECRETS, ttl_days=5),
+        payments_wallet,
+        payments_client,
+        cluster_id,
+    )
+    
+    store_id = await player.store_values(
+        cluster_id, NEW_SECRETS, permissions, receipt_store
+    )
+    
+    PLAYER_CREDENTIALS = {
+        "user_id": user_id,
+            "party_id": party_id,
+            "store_ids": {
+                "SYSTEM_INFO_STORE": store_id,
+            },
+            "party_name": PLAYER_ALIAS
+    }
+    
+    if os.path.exists("credential_store.json"):
+        with open("credential_store.json", "r") as f:
+            store = json.load(f)
+    else:
+        store = {
+            "PLAYERS": {}
+        }
+    
+    store['PLAYERS'][PLAYER_ALIAS] = PLAYER_CREDENTIALS
+    
+    with open("credential_store.json", "w") as f:
+        json.dump(store, f, indent=4)
+    
+    print(f"SERIAL NUMBER AND WALLET ADDRESS STORED: {store_id}")
     
     
 if __name__ == "__main__":

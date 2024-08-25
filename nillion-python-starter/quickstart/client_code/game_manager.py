@@ -13,6 +13,7 @@ import py_nillion_client as nillion
 import os
 
 import hashlib
+import json
 
 from py_nillion_client import NodeKey, UserKey
 from dotenv import load_dotenv
@@ -50,7 +51,10 @@ async def main():
     # PARTY NAMES WE NEED SO TO SPECIFY WHICH CLIENT IS GIVING THE INPUTS AND RECEIVING THE OUTPUTS
     GAME_MANAGER_PARTY = "GAME_MANAGER"
     
-     
+    with open("credential_store.json", "r") as f:
+        game = json.load(f)
+        PLAYER_INFO = game["PLAYER1"]
+    
     # CREATE THE PAYMENTS CONFIG, SET UP NILLION WALLET etc.
     payments_config = create_payments_config(chain_id, grpc_endpoint)
     payments_client = LedgerClient(payments_config)
@@ -78,42 +82,16 @@ async def main():
     # NOW WE CREATE A VARIABLE FOR THE PROGRAM ID TO SET PERMISSONS FOR WHO CAN USE THIS COMPUTATION
     program_id = f'{user_id}/{get_sn}'
     
-    # NOW I GET THE SERIAL NUMBER FORM THE ENV AND THEN GIVE THE OWNERSHIP TO MANAGER AND TEH COMPUTE
-    SN_INT = os.getenv("PLAYER_SERIAL_NUMBER")
-    WALLET_ADDR_INT = os.getenv("PLAYER_WALLET_ADDRESS")
-    
-    NEW_SECRETS = nillion.NadaValues(
-        {
-            "SECRET1": nillion.SecretInteger(SN_INT),
-            "SECRET2": nillion.SecretInteger(20)        # FIXME: REPLACE THIS 20 WITH WALLET_ADDR_INT
+    PROGRAMS = {
+        "ADDITION": {
+            "program_id": program_id
         }
-    )
+    }
     
-    # DEFAULT PERMISSIONS ALLOWS TO USER TO UPDATE AND RETRIEVE THE SECRET 
-    permissions = nillion.Permission.default_for_user(manager.user_id)
-    
-    # COMPUTE PERMISSIONS ALLOWS THE USER TO USE THE SECRET AS AN INPUT FOR THE COMPUTATIONS IN THE SPECIFIED PROGRAM.
-    # USER_ID AND PROGRAM_ID
-    permissions.add_compute_permissions(
-        {
-            manager.user_id: {program_id}
-        }
-    )
-    
-    # DEPLOYING THE SECRETS ONTO THE NET FOR A PLAYER
-    receipt_store = await get_quote_and_pay(
-        manager,
-        nillion.Operation.store_values(NEW_SECRETS, ttl_days=5),
-        payments_wallet,
-        payments_client,
-        cluster_id,
-    )
-    
-    # STORE THE SECRET BY SHOWING THE RECEIPT
-    store_id = await manager.store_values(
-        cluster_id, NEW_SECRETS, permissions, receipt_store
-    )
-    print(f"SECRETS STORED -> ID: {store_id}")
+    with open("credential_store.json", "w") as f:
+        json.dump(PROGRAMS, f, indent=4)
+        
+    print("PROHGRAM ID CREATED AND STORED IN THE CREDENTIAL STORE")
     
     # SETTING UP PROGRAM_BINDINGS FOR THE SPECIFIED PROGRAM_ID
     # THE PROGRAM_BINDINGS OBJECT IS USED TO DEFINE WHICH PARTIES ARE INVOLVED IN THE COMPUTATION AND HOW THEY INTERACT WITH THE PROGRAM
@@ -126,7 +104,7 @@ async def main():
     # THIS LINE REPRESENTS THAT THE PARTY IDENTIFIED BY party_id WILL RECEIVE THE OUTPUT OF THE COMPUTATION.
     compute_bindings.add_output_party(GAME_MANAGER_PARTY, party_id)
     
-    # DEINE COMPUTATIONAL TIME SECRETS BECAUSE .compute FUNCTRIN HAS A BUG !! FUCK IT 
+    # DEINE COMPUTATIONAL TIME SECRETS BECAUSE .compute FUNCTION HAS A BUG !! FUCK IT 
     COMPUTE_SECRETS = nillion.NadaValues({})
     
     # PAY FOR THE COMPUTATION
@@ -142,7 +120,7 @@ async def main():
     compute_id = await manager.compute(
         cluster_id,
         compute_bindings,
-        [store_id],
+        [PLAYER_INFO["store_ids"]["SYSTEM_INFO_STORE"]],
         COMPUTE_SECRETS,
         receipt_compute,
     )
