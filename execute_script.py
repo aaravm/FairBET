@@ -39,7 +39,7 @@ async def get_result_value():
     # finally:
     #     # Stop the nillion-devnet process
     #     nillion_devnet_process.terminate()
-    result_value= "AFDVF"
+    result_value= "Jinesh123"
     return result_value
 
 if __name__ == "__main__":
