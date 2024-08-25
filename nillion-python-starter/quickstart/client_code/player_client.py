@@ -85,7 +85,7 @@ def get_system_info():
 
 async def main():
     
-    PLAYER_ALIAS = "PLAYER1"
+    PLAYER_ALIAS = "PLAYER"
     
     # GET NILLION-DEVNET CREDENTIALS
     cluster_id = os.getenv("NILLION_CLUSTER_ID")
@@ -102,11 +102,6 @@ async def main():
     party_id = player.party_id
     user_id = player.user_id    
     
-    # with open("credential_store.json", "r") as f:
-    #     game = json.load(f)
-    #     PROGRAM_CREDS = game["ADDITION"]
-    
-    
     # CREATE THE PAYMENTS CONFIG, SET UP NILLION WALLET etc.
     payments_config = create_payments_config(chain_id, grpc_endpoint)
     payments_client = LedgerClient(payments_config)
@@ -115,6 +110,23 @@ async def main():
         prefix="nillion",
     )
     
+    # DEPLOY THE PROGRAM 
+    PROGRAM_NAME = "addition"
+    PROGRAM_PATH = f"../nada_quickstart_programs/target/{PROGRAM_NAME}.nada.bin"
+    
+    receipt_store_program = await get_quote_and_pay(
+        player,
+        nillion.Operation.store_program(PROGRAM_PATH),
+        payments_wallet,
+        payments_client,
+        cluster_id,
+    )
+    
+    action_id = await player.store_program(
+        cluster_id, PROGRAM_NAME, PROGRAM_PATH, receipt_store_program
+    )
+    
+    PROGRAM_ID = f'{user_id}/{PROGRAM_NAME}'
     
     # GET ALL THE NECESSARY USER CREDENTIALS WHICH CAN BE USED FOR HARWARE BAN: SERIAL NUMBER, PUBLIC KEY 
     # GET THE NECESSARY SYSTEM IDENTIFIERS
@@ -125,7 +137,6 @@ async def main():
     wallet_addr_int = string_to_int(payments_wallet.address())
     sn_int = string_to_int(serial_number)
     
-    
     NEW_SECRETS = nillion.NadaValues(
         {
             "SECRET1": nillion.SecretInteger(sn_int),
@@ -133,14 +144,8 @@ async def main():
         }
     )
     
-    id = f'{user_id}/addition'
-    
     permissions = nillion.Permissions.default_for_user(player.user_id)    
-    permissions.add_compute_permissions(
-        {
-            player.user_id: {id}
-        }
-    )
+    permissions.add_compute_permissions({player.user_id: {PROGRAM_ID}})
     
     receipt_store = await get_quote_and_pay(
         player,
@@ -154,29 +159,42 @@ async def main():
         cluster_id, NEW_SECRETS, permissions, receipt_store
     )
     
-    PLAYER_CREDENTIALS = {
-        "user_id": user_id,
-            "party_id": party_id,
-            "store_ids": {
-                "SYSTEM_INFO_STORE": store_id,
-            },
-            "party_name": PLAYER_ALIAS
-    }
-    
-    if os.path.exists("credential_store.json"):
-        with open("credential_store.json", "r") as f:
-            store = json.load(f)
-    else:
-        store = {
-            "PLAYERS": {}
-        }
-    
-    store['PLAYERS'][PLAYER_ALIAS] = PLAYER_CREDENTIALS
-    
-    with open("credential_store.json", "w") as f:
-        json.dump(store, f, indent=4)
-    
     print(f"SERIAL NUMBER AND WALLET ADDRESS STORED: {store_id}")
+    
+    # SET UP COMPUTATION OF THE SECRETS
+    
+    compute_bindings = nillion.ProgramBindings(PROGRAM_ID)
+    compute_bindings.add_input_party(PLAYER_ALIAS, party_id)
+    compute_bindings.add_output_party(PLAYER_ALIAS, party_id)
+    
+    COMPUTE_SECRETS = nillion.NadaValues({})
+    
+    receipt_compute = await get_quote_and_pay(
+        player,
+        nillion.Operation.compute(PROGRAM_ID, COMPUTE_SECRETS),
+        payments_wallet,
+        payments_client,
+        cluster_id
+    )
+    
+    compute_id = await player.compute(
+        cluster_id,
+        compute_bindings,
+        [store_id],
+        COMPUTE_SECRETS,
+        receipt_compute
+    )
+    
+    print(f"BLIND COMPUTATION COMPLETE: {compute_id}")
+    
+    # THE BELOW CODE IS RESUNDANT, WE DONT NEED IT    
+    # RETURN THE COMPUTATION RESULTS
+    print(f"THE COMPUTATION WAS SENT THE NETWORK -> ID: {compute_id}")
+    while True:
+        compute_event = await player.next_compute_event()
+        if isinstance(compute_event, nillion.ComputeFinishedEvent):
+            print(f"🖥️  THE UNIFIED SYSTEM IDENTIFIER FOR HARDWARE BAN {compute_event.result.value}")
+            return compute_event.result.value
     
     
 if __name__ == "__main__":
