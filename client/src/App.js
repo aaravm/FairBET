@@ -12,25 +12,7 @@ import Page from "./components/pages/page"
 const socket = io()
 
 function App(){
-  	let my_console = function(){
-		let oldConsole = null	
-		function enable(){
-			if(oldConsole == null) return
-			window['console']['log'] = oldConsole
-			window['console']['warn'] = oldConsole
-			window['console']['error'] = oldConsole
-		}	
-		function disable(){
-			oldConsole = console.log
-			window['console']['log'] = function(){}
-			window['console']['warn'] = function(){}
-			window['console']['error'] = function(){}
-		}	
-		return {enable, disable}
-	}()
-
   	useEffect(() => {
-		//my_console.disable()
 		socket.connect()		
 		return () => {
 			socket.disconnect()
