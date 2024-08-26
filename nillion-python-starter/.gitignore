@@ -4,6 +4,7 @@ nillion-venv/
 permissions/.nillion-config.json
 examples_and_tutorials/nada_programs/target
 quickstart/client_code/credential_store.json
+# quickstart/nada_quickstart_programs/target
 .env
 .idea
 .DS_Store
