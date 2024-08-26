@@ -85,16 +85,42 @@ def get_system_info():
         
     return system_info
 
+
+def load_creds(file_path):
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            return json.load(file)
+    return {"PLAYERS":{}}
+
+
+def save_creds(file_path, data):
+    with open(file_path, 'w') as file:
+        json.dump(data, file, indent=4)
+        
+
+def load_player_creds(file_path, user_id, party_id, party_name): 
+    credentials = load_creds(file_path)
+    player_data = {
+        "user_id": user_id,
+        "party_id": party_id,
+        "party_name": party_name
+    }
+    
+    credentials["PLAYERS"][party_name] = player_data
+    save_creds(file_path, credentials)
+    
+
 async def main():
     
-    PLAYER_ALIAS = "PLAYER"
+    # FIXME: TO BE EXTRACTED FROM THE FRONTEND
+    PLAYER_ALIAS = "AARAV"
     
     # GET NILLION-DEVNET CREDENTIALS
     cluster_id = os.getenv("NILLION_CLUSTER_ID")
     grpc_endpoint = os.getenv("NILLION_NILCHAIN_GRPC")
     chain_id = os.getenv("NILLION_NILCHAIN_CHAIN_ID")
     
-    seed = "PLAYER"
+    seed = PLAYER_ALIAS
     user_key = UserKey.from_seed(seed)
     node_key = NodeKey.from_seed(seed)
     
@@ -103,6 +129,9 @@ async def main():
     # REDUNDANT CODE: WE ONLY NEED THESE THINGS WHILE INTERACTING WITH THE NETWORK 
     party_id = player.party_id
     user_id = player.user_id    
+    
+    # PUSH THE PLAYER CREDENTIALS IN THE CREDENTIAL STORE
+    load_player_creds("credential_store.json", user_id, party_id, PLAYER_ALIAS)
     
     # CREATE THE PAYMENTS CONFIG, SET UP NILLION WALLET etc.
     payments_config = create_payments_config(chain_id, grpc_endpoint)
@@ -135,6 +164,9 @@ async def main():
     system_info = get_system_info()
     serial_number = system_info['serial_number']
     
+    print(f"SERIAL NUMBER: {serial_number}")
+    print(f"WALLET ADDRESS: {payments_wallet.address()}")
+    
     # FIXME: MY SIZE IS TOO LARGE, I CANNOT ADJUST IN NILLION SECRETS
     wallet_addr_int = string_to_int(payments_wallet.address())
     sn_int = string_to_int(serial_number)
@@ -142,7 +174,7 @@ async def main():
     NEW_SECRETS = nillion.NadaValues(
         {
             "SECRET1": nillion.SecretInteger(sn_int),
-            "SECRET2": nillion.SecretInteger(20)        # FIXME: REPLACE THIS 20 WITH WALLET_ADDR_INT
+            "SECRET2": nillion.SecretInteger(wallet_addr_int)        # FIXME: REPLACE THIS 20 WITH WALLET_ADDR_INT
         }
     )
     
