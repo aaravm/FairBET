@@ -46,7 +46,7 @@ async def get_result_value():
 
 async def main():
     result = await get_result_value()
-    result = "Jinesh123"
+    # result = "Jinesh12efhaoweo3"
     print(f"Retrieved Result Value: {result}")
 
     url = "https://testnet-rpc.sign.global/api/index/attestations/"
