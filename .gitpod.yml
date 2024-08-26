@@ -21,6 +21,8 @@ tasks:
       nilup install latest
       nilup use latest
       nilup init
+      sudo apt update
+      sudo apt install nodejs npm
       sh telemetry.sh
       source /home/gitpod/.bashrc && export PATH=$PATH:/home/gitpod/.nilup/sdks/latest
       nillion -V
