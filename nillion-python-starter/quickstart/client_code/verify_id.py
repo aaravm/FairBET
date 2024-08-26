@@ -45,7 +45,7 @@ async def get_result_value():
 
 
 async def main():
-    # result = await get_result_value()
+    result = await get_result_value()
     result = "Jinesh123"
     print(f"Retrieved Result Value: {result}")
 
@@ -73,6 +73,7 @@ async def main():
     else:
         print(f"Error: {response.status_code}, Message: {response.text}")
     return True
+
 if __name__ == "__main__":
     result = asyncio.run(main())
     print(f"Main function returned: {result}")

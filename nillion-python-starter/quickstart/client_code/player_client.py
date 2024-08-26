@@ -69,12 +69,14 @@ def get_system_info():
         # FETCH MOTHERBOARD SERIAL NUMBER
         
         if platform.system() == "Linux":
-            command = "sudo dmidecode -t baseboard | grep Serial"
-            serial_number = subprocess.check_output(command, shell=True).decode().split(':')[1].strip()
+            # command = "sudo dmidecode -t baseboard | grep Serial"
+            # serial_number = subprocess.check_output(command, shell=True).decode().split(':')[1].strip()
+            serial_number = "Linux Serial Number"
             system_info['serial_number'] = serial_number
         elif platform.system() == "Darwin":
-            command = "system_profiler SPHardwareDataType | grep 'Serial Number (system)'"
-            serial_number = subprocess.check_output(command, shell=True).decode().split(':')[1].strip()
+            # command = "system_profiler SPHardwareDataType | grep 'Serial Number (system)'"
+            # serial_number = subprocess.check_output(command, shell=True).decode().split(':')[1].strip()
+            serial_number = "Darwin Serial Number"
             system_info['serial_number'] = serial_number
             
     
