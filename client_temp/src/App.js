@@ -1,21 +1,9 @@
-import { Route, Routes } from "react-router-dom"
-import { Home } from "./pages/Home";
-import { Navbar } from "./components/Navbar";
+import React, { useEffect } from "react"
 
+import Page from "./components/pages/page"
 
 function App() {
-  return (
-    <div>
-      <div>
-        <Navbar/>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-        </Routes>
-
-      </div>
-
-    </div>
-  );
+  return <Page/>
 }
 
-export default App;
+export default App

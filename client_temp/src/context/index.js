@@ -36,10 +36,10 @@ export const StateContextProvider = ({ children }) => {
     };
 
     const connect = async () => {
-        await runPythonFile();
-        if(!output)
-        alert("Fuck off from this website");
-        else
+        // await runPythonFile();
+        // if(!output)
+        // alert("Fuck off from this website");
+        // else
         if (typeof window.ethereum !== "undefined") {
             const { ethereum } = window;
             try {
