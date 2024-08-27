@@ -1,4 +1,8 @@
-import React, { useEffect } from "react"
+import React from "react"
+import 'bootstrap/dist/css/bootstrap.min.css'
+import "./css/fonts.css"
+import "./css/special_occasions.css"
+import "./css/style.css"
 
 import Page from "./components/pages/page"
 
