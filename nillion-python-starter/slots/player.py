@@ -11,21 +11,26 @@ from cosmpy.aerial.client import LedgerClient
 from cosmpy.aerial.wallet import LocalWallet
 from cosmpy.crypto.keypairs import PrivateKey
 
+import base58
+import base64
 
 async def main():
     PROGRAM_NAME="main"
-    PROGRAM_PATH = f"../nada_quickstart_programs/target/{PROGRAM_NAME}.nada.bin"
+    PROGRAM_PATH = f"./nada_quickstart_programs/target/{PROGRAM_NAME}.nada.bin"
 
     # GET NILLION-DEVNET CREDENTIALS
     cluster_id = os.getenv("NILLION_CLUSTER_ID")
     grpc_endpoint = os.getenv("NILLION_NILCHAIN_GRPC")
     chain_id = os.getenv("NILLION_NILCHAIN_CHAIN_ID")
     
+    encoded_key= "7vN3DQRAeg6EEv9Zzxig4gWWZ3uyZ3DUDYaPFYSzvdMF"
+    decoded_key = base58.b58decode(encoded_key)
+
     # CREATE THE PAYMENTS CONFIG, SET UP NILLION WALLET etc.
     payments_config = create_payments_config(chain_id, grpc_endpoint)
     payments_client = LedgerClient(payments_config)
     payments_wallet = LocalWallet(
-        PrivateKey(bytes.fromhex(os.getenv("NILLION_NILCHAIN_PRIVATE_KEY_0"))),
+        PrivateKey(decoded_key),
         prefix="nillion",
     )
 
