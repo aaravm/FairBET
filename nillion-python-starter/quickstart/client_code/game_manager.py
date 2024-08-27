@@ -70,34 +70,7 @@ async def main():
         cluster_id, SHUFFLING_PROGRAM, SHUFFLING_PROGRAM_PATH, shuffle_program_receipt
     )
     
-    PROGRAM_ID = f'{user_id}/{SHUFFLING_PROGRAM}'
-    
-    # DEPLOY 52 CARDS UNDER THE OWNERSHIP OF GAME_MANAGER, AND THEN THEY WILL BE DISTRIBUTED AMONG THE PLAYERS
-    CARDS_SECRETS = {}
-    
-    for i in range(1, 53):
-        secret_name = f"CARD{i}"
-        secret_value = nillion.SecretInteger(i)
-        CARDS_SECRETS[secret_name] = secret_value
-        
-    NEW_SECRETS = nillion.NadaValues(CARDS_SECRETS)
-    
-    permisions = nillion.Permissions.default_for_user(manager.user_id)
-    permisions.add_compute_permissions({manager.user_id: {PROGRAM_ID}})
-    
-    CARD_STORE_RECEIPT = await get_quote_and_pay(
-        manager,
-        nillion.Operation.store_values(NEW_SECRETS, ttl_days=5),
-        payments_wallet,
-        payments_client,
-        cluster_id,
-    )    
-    
-    CARDS_STORE_ID = await manager.store_values(
-        cluster_id, NEW_SECRETS, permisions, CARD_STORE_RECEIPT
-    )
-    
-    print(f"ALL 52 CARDS DEPLOYED IN THE NETWORK: {CARDS_STORE_ID}")
+    PROGRAM_ID = f'{user_id}/{SHUFFLING_PROGRAM}'    
     
     # SET UP THE SHUFFLING COMPUTATION 
     
@@ -125,7 +98,7 @@ async def main():
     COMPUTE_ID = await manager.compute(
         cluster_id,
         compute_bindings,
-        [CARDS_STORE_ID],
+        [],
         COMPUTE_SECRETS,
         COMPUTE_RECEIPT
     )
