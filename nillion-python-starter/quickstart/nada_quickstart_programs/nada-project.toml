@@ -3,6 +3,6 @@ version = "0.1.0"
 authors = [""]
 
 [[programs]]
-path = "src/random_shuffle.py"
-name = "random_shuffle"
+path = "src/check_equal.py"
+name = "check_equal"
 prime_size = 128

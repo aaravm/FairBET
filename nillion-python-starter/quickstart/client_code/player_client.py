@@ -113,7 +113,7 @@ def load_player_creds(file_path, user_id, party_id, party_name):
 async def main():
     
     # FIXME: TO BE EXTRACTED FROM THE FRONTEND
-    PLAYER_ALIAS = "AARAV"
+    PLAYER_ALIAS = "PLAYER"
     
     # GET NILLION-DEVNET CREDENTIALS
     cluster_id = os.getenv("NILLION_CLUSTER_ID")
