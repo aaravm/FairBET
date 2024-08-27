@@ -126,7 +126,6 @@ async def main():
     
     player = create_nillion_client(user_key, node_key)
     
-    # REDUNDANT CODE: WE ONLY NEED THESE THINGS WHILE INTERACTING WITH THE NETWORK 
     party_id = player.party_id
     user_id = player.user_id    
     
