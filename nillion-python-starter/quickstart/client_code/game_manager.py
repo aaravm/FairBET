@@ -75,6 +75,9 @@ async def main():
     # SET UP THE SHUFFLING COMPUTATION 
     
     compute_bindings = nillion.ProgramBindings(PROGRAM_ID)
+    
+    # THERE WILL BE NO INPUT BINDINGS
+    
     # ADD EXISTING PLAYERS TO THE OUTPUT BINDINGS
     CREDS = load_player_creds()  
     PLAYERS = CREDS["PLAYERS"]
