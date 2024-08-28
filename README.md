@@ -1,5 +1,9 @@
-# eth-watchdog
-
+# FairBet
+A decentralized roulette platform focused on ensuring fair play, privacy, and trust using Nillion and Sign protocol. 
+There are 2 parts to this projects:
+1. Securely play roulette and other casino games, with all computations happening securely and privately on Nillion
+2. Securely storing the hash of hardware ID of a user, so that banned user can't play from the same device
+# Usage
 Needed commands: 
 Note: You won't need to run this, if you are using gitpod
 To run using gitpod, search this:
