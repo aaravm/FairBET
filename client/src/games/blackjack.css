@@ -1,0 +1,226 @@
+.button {
+    color: white;
+    padding: 20px 20px;
+    font-size: 1rem;
+    display: flex;
+    height: 100%;
+    width: 20%;
+    align-items: center;
+    background: #202020;
+    justify-content: center;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: .2s;
+  }
+  
+  .button:hover {
+    transform: scale(1.04);
+    box-shadow: 2px 6px 4px rgba(0, 0, 0, 0.25);
+    color: yellow;
+  }
+  
+  .translate_player {
+    transform: translateX(25vw) translateY(200px);
+  }
+  
+  .translate_bot {
+    transform: translateX(18.7vw) translateY(-50px);
+  }
+  
+  * {
+    font-family: Montserrat;
+  }
+  
+  body {
+    padding: 0px;
+    margin: 0px;
+    background: radial-gradient(50% 50% at 50% 50%, #0F947C 0%, #005344 100%);
+    background-attachment: fixed;
+    position: relative;
+    height: 100%;
+  }
+  
+  .money {
+    color: white;
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    margin: 30px auto;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  
+  .money .money_title {
+    border: 2px solid white;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    margin-right: 20px;
+  }
+  
+  .game-box {
+    width: 100%;
+    margin: 0px auto;
+  }
+  
+  .title_game {
+    height: 200px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #B7B7B7;
+    font-size: 50px;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+  
+  .block_carts {
+    height: 200px;
+    width: 100vw;
+    display: flex;
+    justify-content: left;
+    margin: 30px auto;
+  }
+  
+  .cart_bg {
+    position: absolute;
+    width: 120px;
+    z-index: 120;
+    box-shadow: 10px 10px 10px rgb(43, 43, 43);
+  }
+  
+  .cart {
+    height: 10rem;
+    position: absolute;
+    background: rgb(97, 97, 97);
+    z-index: 1;
+    margin-right: 0.5%;
+    box-shadow: 10px 10px 10px rgb(43, 43, 43);
+    transform: translateX(-600px) translateY(-70px);
+  }
+  
+  .cart.bot {
+    position: static;
+    height: 150px;
+    transition: .5s ease-in-out;
+    transform: translateX(22.3vw) translateY(-50px);
+  }
+  
+  .cart.move {
+    position: static;
+    height: 150px;
+    transition: .5s ease-in-out;
+    transform: translateX(28vw) translateY(200px);
+  }
+  
+  .player {
+    margin: 0px 20px;
+    text-align: center;
+    font-size: 30px;
+    color: white;
+    border: 3px solid white;
+    padding: 20px;
+    border-radius: 10px;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+  
+  .continue {
+    color: white;
+    padding: 20px 20px;
+    font-size: 1rem;
+    display: flex;
+    height: 100%;
+    width: 20%;
+    align-items: center;
+    background: #202020;
+    justify-content: center;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: .2s;
+    margin-left: 20px;
+  }
+  
+  .continue:hover {
+    transform: scale(1.04);
+    box-shadow: 2px 6px 4px rgba(0, 0, 0, 0.25);
+    color: yellow;
+  }
+  
+  .score {
+    font-size: 40px;
+    color: white;
+    padding: 20px;
+    background: #202020;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 7px;
+  }
+  
+  .footer {
+    display: flex;
+    flex-direction: row;
+    width: 40%;
+    margin: 200px auto 0px auto;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .footer .start,
+  .footer .yes,
+  .footer .pass {
+    color: white;
+    padding: 20px 20px;
+    font-size: 1rem;
+    display: flex;
+    height: 100%;
+    width: 20%;
+    align-items: center;
+    background: #202020;
+    justify-content: center;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: .2s;
+  }
+  
+  .footer .start {
+    padding: 20px 30px;
+  }
+  
+  .footer .pass:hover {
+    color: red;
+  }
+  
+  .footer .start_block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .input {
+    color: white;
+    font-size: 20px;
+    margin-top: 20px;
+    background: rgba(121, 121, 121, 0);
+    padding: 10px;
+    outline: none;
+    border: 3px solid #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 13px;
+  }
+  
+  .result {
+    z-index: 200;
+    border-radius: 10px;
+    padding: 10px;
+    border: 3px solid white;
+    font-size: 2rem;
+    position: absolute;
+    top: 52%;
+    right: 47%;
+  }
+  
+  
+  
