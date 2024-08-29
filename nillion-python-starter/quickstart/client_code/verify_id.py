@@ -47,7 +47,7 @@ async def get_result_value():
 async def main():
     result = await get_result_value()
     # result = "Jinesh12efhaoweo3"
-    print(f"Retrieved Result Value: {result}")
+    # print(f"Retrieved Result Value: {result}")
 
     url = "https://testnet-rpc.sign.global/api/index/attestations/"
     # Set the query parameters
@@ -62,8 +62,8 @@ async def main():
     if response.status_code == 200:
         # Parse the JSON response
         data = response.json()
-        print("Success:", data["success"])
-        print("Total Attestations:", data["data"]["total"])
+        # print("Success:", data["success"])
+        # print("Total Attestations:", data["data"]["total"])
         for i in data["data"]["rows"]:
             clean_hex = re.sub(r'^0x', '', i["data"])  # Remove "0x" prefix if present
             decoded_data = decode(['string'], bytes.fromhex(clean_hex))
@@ -76,4 +76,4 @@ async def main():
 
 if __name__ == "__main__":
     result = asyncio.run(main())
-    print(f"Main function returned: {result}")
+    print(f"{result}",end='')

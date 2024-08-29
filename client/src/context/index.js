@@ -8,10 +8,10 @@ export const StateContextProvider = ({ children }) => {
     const [pyodide, setPyodide] = useState(null);
     const [output, setOutput] = useState('');
     const [error, setError] = useState('');
-    
+    let response
     const runPythonFile = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:5000/run-python')
+            response = await axios.get('http://127.0.0.1:5000/run-python')
             console.log("jindagi acchi");
 
             console.log("response",response)
@@ -41,24 +41,24 @@ export const StateContextProvider = ({ children }) => {
 
     const connect = async () => {
         await runPythonFile()
-        console.log("output:", output)
-        if(!output)
-        alert("Fuck off from this website");
-        else
-        if (typeof window.ethereum !== "undefined") {
-            const { ethereum } = window;
-            try {
-                await ethereum.request({ method: "eth_requestAccounts" })
-            } catch (error) {
-                console.log(error)
-            }
+        // console.log("output:", output)
+        // if(!output)
+        // alert("Fuck off from this website");
+        // else
+        // if (typeof window.ethereum !== "undefined") {
+        //     const { ethereum } = window;
+        //     try {
+        //         await ethereum.request({ method: "eth_requestAccounts" })
+        //     } catch (error) {
+        //         console.log(error)
+        //     }
 
-            const accounts = await ethereum.request({ method: "eth_accounts" })
-            console.log(accounts)
-            window.location.reload(false);
-        } else {
-            alert("Please install MetaMask");
-        }
+        //     const accounts = await ethereum.request({ method: "eth_accounts" })
+        //     console.log(accounts)
+        //     window.location.reload(false);
+        // } else {
+        //     alert("Please install MetaMask");
+        // }
     }
     
     
@@ -116,9 +116,36 @@ export const StateContextProvider = ({ children }) => {
         Address();
         console.log(account);
     }, [])
-    useEffect(()=>{
-        console.log(output)
-    },[output])
+
+
+    useEffect(() => {
+        console.log("output:", output);
+
+        const handleEthereum = async () => {
+            if(output==='') return;
+            if (!output) {
+                alert("Fuck off from this website");
+            } else {
+                if (typeof window.ethereum !== "undefined") {
+                    const { ethereum } = window;
+                    try {
+                        await ethereum.request({ method: "eth_requestAccounts" });
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                    const accounts = await ethereum.request({ method: "eth_accounts" });
+                    console.log(accounts);
+                    window.location.reload(false);
+                } else {
+                    alert("Please install MetaMask");
+                }
+            }
+        };
+
+        handleEthereum(); // Call the async function
+    }, [output]);
+
 
 
     return (

@@ -5,7 +5,7 @@ import subprocess
 app = Flask(__name__)
 CORS(app)  # This will allow CORS for all origins
 
-@app.route('/run-python', methods=['POST'])
+@app.route('/run-python', methods=['GET'])
 def run_python():
     python_file = './verify_id.py'
 
