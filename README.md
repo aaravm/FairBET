@@ -10,6 +10,16 @@ To run using gitpod, search this:
 ```
 https://gitpod.io/new/#https://github.com/aaravm/eth-watchdog
 ```
+
+To run using docker:
+Step 1: Building the containers
+```
+docker build -t nillion-python-starter .
+```
+Step 2: Run the Docker Container:
+```
+docker run -it nillion-python-starter
+```
 To run locally:
 
 Step 1: Clone the Repository
