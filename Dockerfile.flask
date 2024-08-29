@@ -15,9 +15,9 @@ RUN python3 -m venv .venv \
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
-# Define environment variable for Flask
+# Define environment variables for Flask
 ENV FLASK_APP=nillion-python-starter/quickstart/client_code/server.py
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Run Flask when the container launches
-CMD ["flask", "run", "--host=0.0.0.0"]
+# Run the Flask application when the container launches
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
