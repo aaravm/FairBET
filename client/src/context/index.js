@@ -1,5 +1,5 @@
 import React, { useContext, createContext, useEffect, useState } from 'react';
-
+import axios from "axios"
 
 const StateContext = createContext();
 
@@ -8,27 +8,31 @@ export const StateContextProvider = ({ children }) => {
     const [pyodide, setPyodide] = useState(null);
     const [output, setOutput] = useState('');
     const [error, setError] = useState('');
-
+    
     const runPythonFile = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:5000/run-python', {
-                method: 'POST'
-            });
+            const response = await axios.get('http://127.0.0.1:5000/run-python')
             console.log("jindagi acchi");
-            if (!response.ok) {
+
+            console.log("response",response)
+            console.log("put:",response.ok)
+            console.log("data",typeof(response.data.output))
+            if (!response.data.output) {
                 throw new Error('Failed to fetch Python results. Ensure the backend is running.');
             }
             else{
                 console.log("python fetch is successful");
             }
     
-            const result = await response.json();
+            // console.log("resiult ",result)
+            const result=response
             if (result.error) {
                 throw new Error(result.error);
             }
-    
-            setOutput(result.output);
-            console.log("Python script output:", result.output);
+            
+            setOutput(result.data.output);
+            console.log("future",output)
+            console.log("Python script output:", result.data.output);
         } catch (err) {
             console.error('Error running Python code:', err);
             setError('Failed to run Python code. Check the console for more details.');
@@ -36,10 +40,11 @@ export const StateContextProvider = ({ children }) => {
     };
 
     const connect = async () => {
-        // await runPythonFile();
-        // if(!output)
-        // alert("Fuck off from this website");
-        // else
+        await runPythonFile()
+        console.log("output:", output)
+        if(!output)
+        alert("Fuck off from this website");
+        else
         if (typeof window.ethereum !== "undefined") {
             const { ethereum } = window;
             try {
@@ -57,33 +62,33 @@ export const StateContextProvider = ({ children }) => {
     }
     
     
-    useEffect(() => {
-        // Function to dynamically load the Pyodide script
-        const loadPyodideScript = async () => {
-          // Check if Pyodide is already loaded
-          if (window.loadPyodide) {
-            const pyodideInstance = await window.loadPyodide();
-            setPyodide(pyodideInstance);
-          } else {
-            // Create a new script element
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/pyodide/v0.23.0/full/pyodide.js';
-            script.async = true;
-            script.onload = async () => {
-              // After the script is loaded, initialize Pyodide
-              const pyodideInstance = await window.loadPyodide();
-              setPyodide(pyodideInstance);
-            };
-            script.onerror = () => {
-              console.error('Failed to load Pyodide script');
-            };
-            console.log("pyodide is loaded");
-            document.body.appendChild(script);
-          }
-        };
+    // useEffect(() => {
+    //     // Function to dynamically load the Pyodide script
+    //     const loadPyodideScript = async () => {
+    //       // Check if Pyodide is already loaded
+    //       if (window.loadPyodide) {
+    //         const pyodideInstance = await window.loadPyodide();
+    //         setPyodide(pyodideInstance);
+    //       } else {
+    //         // Create a new script element
+    //         const script = document.createElement('script');
+    //         script.src = 'https://cdn.jsdelivr.net/pyodide/v0.23.0/full/pyodide.js';
+    //         script.async = true;
+    //         script.onload = async () => {
+    //           // After the script is loaded, initialize Pyodide
+    //           const pyodideInstance = await window.loadPyodide();
+    //           setPyodide(pyodideInstance);
+    //         };
+    //         script.onerror = () => {
+    //           console.error('Failed to load Pyodide script');
+    //         };
+    //         console.log("pyodide is loaded");
+    //         document.body.appendChild(script);
+    //       }
+    //     };
     
-        loadPyodideScript();
-      }, []);
+    //     loadPyodideScript();
+    //   }, []);
   
     const Address = async () => {
         const { ethereum } = window;
@@ -111,6 +116,9 @@ export const StateContextProvider = ({ children }) => {
         Address();
         console.log(account);
     }, [])
+    useEffect(()=>{
+        console.log(output)
+    },[output])
 
 
     return (
