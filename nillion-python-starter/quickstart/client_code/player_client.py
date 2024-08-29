@@ -78,8 +78,12 @@ def get_system_info():
             # serial_number = subprocess.check_output(command, shell=True).decode().split(':')[1].strip()
             serial_number = "Darw"
             system_info['serial_number'] = serial_number
+        elif platform.system() == "Windows":
+            command = "wmic baseboard get serialnumber"
+            serial_number = subprocess.check_output(command, shell=True).decode().split('\n')[1].strip()
+            system_info['serial_number'] = serial_number
             
-    
+                
     except Exception as e:
         system_info['error_serial'] = str(e)
         
