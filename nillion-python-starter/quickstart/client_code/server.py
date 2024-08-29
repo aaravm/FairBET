@@ -12,7 +12,10 @@ def run_python():
 
     try:
         result = subprocess.run(['python3', python_file], capture_output=True, text=True)
-        return jsonify({'output': result.stdout, 'error': result.stderr}), result.returncode
+        if result.returncode == 0:
+            return jsonify({'output': result.stdout.strip(), 'error': result.stderr.strip()}), 200
+        else:
+            return jsonify({'output': result.stdout, 'error': result.stderr}), result.returncode
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     

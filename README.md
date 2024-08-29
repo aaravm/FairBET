@@ -4,13 +4,13 @@ There are 2 parts to this projects:
 1. Securely play roulette and other casino games, with all computations happening securely and privately on Nillion
 2. Securely storing the hash of hardware ID of a user, so that banned user can't play from the same device
 ## Usage
-Needed commands: 
-Note: You won't need to run this, if you are using gitpod
+
+### Option 1: Use Gitpod
 To run using gitpod, search this:
 ```
 https://gitpod.io/new/#https://github.com/aaravm/eth-watchdog
 ```
-
+### Option 2: Use Docker
 To run using docker:
 Step 1: Building the containers
 ```
@@ -20,6 +20,7 @@ Step 2: Run the Docker Container:
 ```
 docker run -it nillion-python-starter
 ```
+### Option 3: Build Locally
 To run locally:
 
 Step 1: Clone the Repository
