@@ -20,6 +20,12 @@ Step 2: Run the Docker Container:
 ```
 docker run -it nillion-python-starter
 ```
+To run the servers:
+```
+docker build -f Dockerfile.flask -t flask-app .
+docker run -p 5000:5000 flask-app
+```
+
 ### Option 3: Build Locally
 To run locally:
 
