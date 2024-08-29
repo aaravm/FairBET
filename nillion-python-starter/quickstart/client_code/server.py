@@ -9,9 +9,24 @@ CORS(app)  # This will allow CORS for all origins
 @app.route('/run-python', methods=['GET'])
 def run_python():
     python_file = './verify_id.py'
+    param1 = request.args.get('username')
 
     try:
-        result = subprocess.run(['python3', python_file], capture_output=True, text=True)
+        result = subprocess.run(['python3', python_file,param1], capture_output=True, text=True)
+        if result.returncode == 0:
+            return jsonify({'output': result.stdout.strip(), 'error': result.stderr.strip()}), 200
+        else:
+            return jsonify({'output': result.stdout, 'error': result.stderr}), result.returncode
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/set-user', methods=['POST'])
+def set_user():
+    python_file = './setuser.py'
+    param1 = request.args.get('username')
+
+    try:
+        result = subprocess.run(['python3', python_file,param1], capture_output=True, text=True)
         if result.returncode == 0:
             return jsonify({'output': result.stdout.strip(), 'error': result.stderr.strip()}), 200
         else:
@@ -20,7 +35,7 @@ def run_python():
         return jsonify({'error': str(e)}), 500
     
 # NEW ROUTE TO HANDLE THE "/GET-PLAYER" REQUEST
-@app.route('/get-player', methods=['GET'])
+@app.route('/get-player', methods=['POST'])
 def get_player():
     try: 
         # FIXME: SET THE CORRECT URL

@@ -8,9 +8,11 @@ export const StateContextProvider = ({ children }) => {
     const [pyodide, setPyodide] = useState(null);
     const [output, setOutput] = useState('');
     const [error, setError] = useState('');
-    let response
+
+    
     const runPythonFile = async () => {
         try {
+            await callPythonFunction();
             response = await axios.get('http://127.0.0.1:5000/run-python')
             console.log("jindagi acchi");
 
