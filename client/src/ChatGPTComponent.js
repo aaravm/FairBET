@@ -17,7 +17,7 @@ const ChatGPTComponent = () => {
         },
         {
           headers: {
-            'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,  // Replace with your API key
+            'Authorization': `Bearer sk-WHPOfoCquzMqUx_oq19KowaBF0x4_2lK3xuEeHGXvAT3BlbkFJsCqqUP2Hp3YnBAja8ecPsPU_MosmHNod6oRVnC7l4A`,  // Replace with your API key
             'Content-Type': 'application/json'
           }
         }
