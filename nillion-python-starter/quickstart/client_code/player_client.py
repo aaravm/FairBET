@@ -1,4 +1,5 @@
 import asyncio
+import aiohttp
 import py_nillion_client as nillion
 import os
 
@@ -24,6 +25,17 @@ def string_to_int(s):
     hash_object = hashlib.sha256(s.encode())    # USE SHA256 HASH FUNCTION
     hex_dig = hash_object.hexdigest()           # GET HEXADECIMAL DIGEST
     return int(hex_dig,  16)                    # CONVERT HEX TO INTEGER 
+    
+async def fetch_player_alias():
+    url = "http://localhost:5000/get-player"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            if response.status == 200:
+                data = await response.json()
+                return data["player_alias"]
+            else:
+                print(f"Failed to get player alias: {response.status}")
+                return None
     
 def get_system_info():
     """
@@ -116,9 +128,14 @@ def load_player_creds(file_path, user_id, party_id, party_name):
 
 async def main():
     
-    # FIXME: TO BE EXTRACTED FROM THE FRONTEND
-    PLAYER_ALIAS = "PLAYER"
-    
+    PLAYER_ALIAS = await fetch_player_alias()
+    if PLAYER_ALIAS:
+        print(f"Player alias retrieved: {PLAYER_ALIAS}")
+        # Now you can use PLAYER_ALIAS in the rest of your logic
+    else:
+        print("Could not retrieve PLAYER_ALIAS")   
+        
+         
     # GET NILLION-DEVNET CREDENTIALS
     cluster_id = os.getenv("NILLION_CLUSTER_ID")
     grpc_endpoint = os.getenv("NILLION_NILCHAIN_GRPC")

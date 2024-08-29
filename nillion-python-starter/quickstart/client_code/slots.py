@@ -1,4 +1,5 @@
 import asyncio
+import aiohttp
 import py_nillion_client as nillion
 import os
 
@@ -13,17 +14,41 @@ from cosmpy.crypto.keypairs import PrivateKey
 home = os.getenv("HOME")
 load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
 
+
+async def fetch_player_alias():
+    url = "http://localhost:5000/get-player"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            if response.status == 200:
+                data = await response.json()
+                return data['player_alias']
+            else: 
+                print(f"Failed to get player alias: {response.status}")
+                return None
+            
+async def fetch_secrets():
+    url = "http://localhost:5000/get-secret"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            if response.status == 200:
+                data = await response.json()
+                return data
+            else:
+                print(f"FAILED TO RETRIVE SECRETS: {response.status}")
+                return None
+            
+
 async def main(): 
     
-    # FIXME: THIS WILL BE EXTRACTED FROM THE FRONTEND, WHO IS MAKING THE GUESS ??
-    PLAYER_ALIAS = "PLAYER"
+    PLAYER_ALIAS = await fetch_player_alias()
+    if PLAYER_ALIAS:
+        print(f"Player alias retrieved: {PLAYER_ALIAS}")
+        # Now you can use PLAYER_ALIAS in the rest of your logic
+    else:
+        print("Could not retrieve PLAYER_ALIAS")
+    
+    
     MANAGER = "GAME_MANAGER"
-    
-    # ------------------xxxxxxx---------------------
-    
-    # FIXME: SECURITY BREACH, IMPLEMENT THE DEPLOYMENT FUNCTION IN THE GAME_MANGER AND CLIENT CODEBASE
-    # FOR NOW RECRETING PRIVATE KEYS OF PLAYER AND GAME_MANAGER AGAIN HERE
-    # SHOULD BE MADE A FUCNTION CALL IN THE .py FILES 
     
     # PLAYER
     seed = PLAYER_ALIAS
@@ -76,9 +101,10 @@ async def main():
     
     # DEPLOY THE SECRETS 
 
-    # TODO: Get secret_guess and secret_target from frontend
-    secret_guess = 10
-    secret_target = 10
+    SECRETS = await fetch_secrets()
+
+    secret_guess = SECRETS['secret_guess']
+    secret_target = SECRETS['secret_target']
 
     SECRET_GUESS = nillion.NadaValues(
         {
