@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  nillion-devnet:
+    build:
+      context: ./nillion-devnet
+      dockerfile: Dockerfile
+    volumes:
+      - ./nillion-devnet:/root/.nilup
+    command: /bin/bash -c "source /root/.bashrc && nillion-devnet"
+    networks:
+      - nillion-network
+
+  flask-app:
+    build:
+      context: ./flask-app
+      dockerfile: Dockerfile
+    environment:
+      - FLASK_ENV=development
+    volumes:
+      - ./nillion-python-starter:/app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - nillion-devnet
+    networks:
+      - nillion-network
+
+networks:
+  nillion-network:
+    driver: bridge

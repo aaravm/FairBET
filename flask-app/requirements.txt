@@ -1,0 +1,10 @@
+py-nillion-client
+nada-dsl
+nillion-python-helpers
+python-dotenv==1.0.0
+cosmpy>=0.9.2
+psutil
+eth-abi
+flask
+flask_cors
+aiohttp
