@@ -12,7 +12,7 @@ export const StateContextProvider = ({ children }) => {
     
     const runPythonFile = async () => {
         try {
-            await callPythonFunction();
+            // await callPythonFunction();
             response = await axios.get('http://127.0.0.1:5000/run-python')
             console.log("jindagi acchi");
 
