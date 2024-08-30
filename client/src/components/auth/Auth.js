@@ -32,11 +32,11 @@ import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oau
 
 // IMP START - SDK Initialization
 // IMP START - Dashboard Registration
-const web3AuthClientId = "BM8gO39uO3mkdk_Aq3RoCMHhUGBKCn2oN39rjg-WHXwtcKbsXdhQYBdLeD0jszvw5k6j0t0XxEj9EJawsgu3T_o"; // get from https://dashboard.web3auth.io
+const web3AuthClientId = "BMfXTp8Uw46B0s1TghUjTjr7o_SQkHRY6NrgAlGVKbQOEZq-PQrXnNfKOtsR0TP91_770jh8DV3OgfkvuEqXl5E"; // get from https://dashboard.web3auth.io
 // IMP END - Dashboard Registration
 
 // IMP START - Verifier Creation
-const verifier = "barrytra";
+const verifier = "barrytra2";
 const firebaseVerifier = "w3a-firebase-demo";
 // IMP END - Verifier Creation
 
@@ -415,7 +415,7 @@ function Auth() {
 
   const unloggedInView = (
     <>
-      <GoogleOAuthProvider clientId="726465628265-mdb6g46isvs1vvvtfm7ee0mbb20j19oa.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="726465628265-e9pa2f0ooh3bvc4u7ciftugb1pt78mt9.apps.googleusercontent.com">
         <div className={coreKitStatus !== COREKIT_STATUS.REQUIRED_SHARE ? "" : "disabledDiv"}>
           <GoogleLogin onSuccess={login} onError={() =>
             uiConsole("Login Failed")

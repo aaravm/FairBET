@@ -3,7 +3,7 @@ import { useStateContext } from "../context/index";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const { account, connect } = useStateContext();
 
     return (

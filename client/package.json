@@ -45,7 +45,10 @@
     "lint": "react-scripts lint"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -61,6 +64,7 @@
   },
   "devDependencies": {
     "gh-pages": "^2.2.0",
+    "assert": "^2.0.0",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
@@ -71,6 +75,7 @@
     "react-app-rewired": "^2.2.1",
     "source-map-loader": "^4.0.1",
     "stream-browserify": "^3.0.0",
-    "stream-http": "^3.2.0"
+    "stream-http": "^3.2.0",
+    "url": "^0.11.1"
   }
 }

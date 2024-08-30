@@ -17,6 +17,7 @@ import fifthRow from '../components/roulette/table/rows/FifthRow.json';
 import columnLeft from '../components/roulette/table/rows/ColumnLeft.json';
 import columnRight from '../components/roulette/table/rows/ColumnRight.json';
 import Logo from '../components/roulette/Logo';
+import Chat from '../components/Chat';
 
 
 class Roulette extends React.Component {
@@ -305,6 +306,7 @@ class Roulette extends React.Component {
             
           </Container>
         </Row>
+        <Chat/>
       </Container>
     )
   }
