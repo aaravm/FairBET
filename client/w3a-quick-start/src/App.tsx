@@ -32,11 +32,11 @@ import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oau
 
 // IMP START - SDK Initialization
 // IMP START - Dashboard Registration
-const web3AuthClientId = "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ"; // get from https://dashboard.web3auth.io
+const web3AuthClientId = "BM8gO39uO3mkdk_Aq3RoCMHhUGBKCn2oN39rjg-WHXwtcKbsXdhQYBdLeD0jszvw5k6j0t0XxEj9EJawsgu3T_o"; // get from https://dashboard.web3auth.io
 // IMP END - Dashboard Registration
 
 // IMP START - Verifier Creation
-const verifier = "w3a-sfa-web-google";
+const verifier = "barrytra";
 const firebaseVerifier = "w3a-firebase-demo";
 // IMP END - Verifier Creation
 
@@ -52,7 +52,7 @@ const chainConfig = {
 
 const coreKitInstance = new Web3AuthMPCCoreKit({
   web3AuthClientId,
-  web3AuthNetwork: WEB3AUTH_NETWORK.MAINNET,
+  web3AuthNetwork: WEB3AUTH_NETWORK.DEVNET,
   storage: window.localStorage,
   manualSync: true, // This is the recommended approach
   tssLib: tssLib
@@ -66,12 +66,13 @@ evmProvider.setupProvider(makeEthereumSigner(coreKitInstance));
 // IMP START - Auth Provider Login
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyB0nd9YsPLu-tpdCrsXn8wgsWVAiYEpQ_E",
-  authDomain: "web3auth-oauth-logins.firebaseapp.com",
-  projectId: "web3auth-oauth-logins",
-  storageBucket: "web3auth-oauth-logins.appspot.com",
-  messagingSenderId: "461819774167",
-  appId: "1:461819774167:web:e74addfb6cc88f3b5b9c92",
+  apiKey: "AIzaSyDxISHfCVZeu3aplDtncLaa27J1blzbSkE",
+  authDomain: "fairbet-778db.firebaseapp.com",
+  projectId: "fairbet-778db",
+  storageBucket: "fairbet-778db.appspot.com",
+  messagingSenderId: "1037158491170",
+  appId: "1:1037158491170:web:c38464aabbb2ea5270d67b",
+  measurementId: "G-WKLYXY4YXR"
 };
 // IMP END - Auth Provider Login
 
@@ -88,7 +89,7 @@ function App() {
       // IMP START - SDK Initialization
       await coreKitInstance.init();
       // IMP END - SDK Initialization
-
+      // console.log("web234",coreKitInstance.status)
       setCoreKitStatus(coreKitInstance.status);
     };
     init();
@@ -112,6 +113,7 @@ function App() {
       } as JWTLoginParams;
 
       await coreKitInstance.loginWithJWT(idTokenLoginParams);
+      // console.log("teri",coreKitInstance.status)
       if (coreKitInstance.status === COREKIT_STATUS.LOGGED_IN) {
         await coreKitInstance.commitChanges(); // Needed for new accounts
       }
@@ -413,7 +415,7 @@ function App() {
 
   const unloggedInView = (
     <>
-      <GoogleOAuthProvider clientId="519228911939-cri01h55lsjbsia1k7ll6qpalrus75ps.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="726465628265-mdb6g46isvs1vvvtfm7ee0mbb20j19oa.apps.googleusercontent.com">
         <div className={coreKitStatus !== COREKIT_STATUS.REQUIRED_SHARE ? "" : "disabledDiv"}>
           <GoogleLogin onSuccess={login} onError={() =>
             uiConsole("Login Failed")
