@@ -5,7 +5,7 @@ const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
     const [account, setAccount] = useState('')
-    const [pyodide, setPyodide] = useState(null);
+    // const [pyodide, setPyodide] = useState(null);
     const [output, setOutput] = useState('');
     const [error, setError] = useState('');
 
@@ -13,7 +13,7 @@ export const StateContextProvider = ({ children }) => {
     const runPythonFile = async () => {
         try {
             // await callPythonFunction();
-            response = await axios.get('http://127.0.0.1:5000/run-python')
+            const response = await axios.get('http://127.0.0.1:5000/run-python')
             console.log("jindagi acchi");
 
             console.log("response",response)

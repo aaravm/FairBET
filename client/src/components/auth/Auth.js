@@ -23,35 +23,36 @@ import Web3 from "web3";
 import { BN } from "bn.js";
 
 // Firebase libraries for custom authentication
-import { initializeApp } from "@firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
+import "./Auth.css";
 import { tssLib } from "@toruslabs/tss-dkls-lib";
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 
-// IMP START - SDK Initialization    
+// IMP START - SDK Initialization
 // IMP START - Dashboard Registration
-const web3AuthClientId = "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ"; // get from https://dashboard.web3auth.io
+const web3AuthClientId = "BM8gO39uO3mkdk_Aq3RoCMHhUGBKCn2oN39rjg-WHXwtcKbsXdhQYBdLeD0jszvw5k6j0t0XxEj9EJawsgu3T_o"; // get from https://dashboard.web3auth.io
 // IMP END - Dashboard Registration
 
 // IMP START - Verifier Creation
-const verifier = "w3a-sfa-web-google";
+const verifier = "barrytra";
 const firebaseVerifier = "w3a-firebase-demo";
 // IMP END - Verifier Creation
 
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0x14a34", // Sepolia testnet chain ID
-  rpcTarget: "https://sepolia.base.org/",
-  displayName: "Base Sepolia",
-  blockExplorer: "https://sepolia-explorer.base.org/",
+  chainId: "0x1", // Please use 0x1 for Mainnet
+  rpcTarget: "https://rpc.ankr.com/eth",
+  displayName: "Ethereum Mainnet",
+  blockExplorer: "https://etherscan.io/",
   ticker: "ETH",
   tickerName: "Ethereum",
 };
 
 const coreKitInstance = new Web3AuthMPCCoreKit({
   web3AuthClientId,
-  web3AuthNetwork: WEB3AUTH_NETWORK.MAINNET,
+  web3AuthNetwork: WEB3AUTH_NETWORK.DEVNET,
   storage: window.localStorage,
   manualSync: true, // This is the recommended approach
   tssLib: tssLib
@@ -65,12 +66,13 @@ evmProvider.setupProvider(makeEthereumSigner(coreKitInstance));
 // IMP START - Auth Provider Login
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyB0nd9YsPLu-tpdCrsXn8wgsWVAiYEpQ_E",
-  authDomain: "web3auth-oauth-logins.firebaseapp.com",
-  projectId: "web3auth-oauth-logins",
-  storageBucket: "web3auth-oauth-logins.appspot.com",
-  messagingSenderId: "461819774167",
-  appId: "1:461819774167:web:e74addfb6cc88f3b5b9c92",
+  apiKey: "AIzaSyDxISHfCVZeu3aplDtncLaa27J1blzbSkE",
+  authDomain: "fairbet-778db.firebaseapp.com",
+  projectId: "fairbet-778db",
+  storageBucket: "fairbet-778db.appspot.com",
+  messagingSenderId: "1037158491170",
+  appId: "1:1037158491170:web:c38464aabbb2ea5270d67b",
+  measurementId: "G-WKLYXY4YXR"
 };
 // IMP END - Auth Provider Login
 
@@ -87,7 +89,7 @@ function Auth() {
       // IMP START - SDK Initialization
       await coreKitInstance.init();
       // IMP END - SDK Initialization
-
+      // console.log("web234",coreKitInstance.status)
       setCoreKitStatus(coreKitInstance.status);
     };
     init();
@@ -111,6 +113,7 @@ function Auth() {
       };
 
       await coreKitInstance.loginWithJWT(idTokenLoginParams);
+      // console.log("teri",coreKitInstance.status)
       if (coreKitInstance.status === COREKIT_STATUS.LOGGED_IN) {
         await coreKitInstance.commitChanges(); // Needed for new accounts
       }
@@ -184,7 +187,7 @@ function Auth() {
       });
       uiConsole("Social Factor Key: ", factorKey);
       setBackupFactorKey(factorKey);
-      return factorKey;
+      return factorKey
     } catch (err) {
       uiConsole(err);
       return "";

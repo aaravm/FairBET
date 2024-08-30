@@ -12,10 +12,10 @@ const Navbar = () => {
             <div>
                 <button
                     type='button'
-                    onClick={connect}
+                    // onClick={connect}
                 >
                     {/* Connect Wallet  */}
-                    {account === "" ? "Connect Wallet" : <h3>{account}</h3>}
+                    {/* {account === "" ? "Connect Wallet" : <h3>{account}</h3>} */}
                 </button>
             </div>
         </div>
