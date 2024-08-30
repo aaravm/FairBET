@@ -124,16 +124,17 @@ def load_player_creds(file_path, user_id, party_id, party_name):
     
     credentials["PLAYERS"][party_name] = player_data
     save_creds(file_path, credentials)
-    
 
 async def main():
     
-    PLAYER_ALIAS = await fetch_player_alias()
-    if PLAYER_ALIAS:
-        print(f"Player alias retrieved: {PLAYER_ALIAS}")
-        # Now you can use PLAYER_ALIAS in the rest of your logic
-    else:
-        print("Could not retrieve PLAYER_ALIAS")   
+    # PLAYER_ALIAS = await fetch_player_alias()
+    # if PLAYER_ALIAS:
+    #     print(f"Player alias retrieved: {PLAYER_ALIAS}")
+    #     # Now you can use PLAYER_ALIAS in the rest of your logic
+    # else:
+    #     print("Could not retrieve PLAYER_ALIAS")   
+    
+    PLAYER_ALIAS = "PLAYER"
         
          
     # GET NILLION-DEVNET CREDENTIALS

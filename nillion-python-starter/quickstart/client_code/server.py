@@ -12,7 +12,7 @@ def run_python():
     param1 = request.args.get('username')
 
     try:
-        result = subprocess.run(['python3', python_file,param1], capture_output=True, text=True)
+        result = subprocess.run(['python3', python_file, param1], capture_output=True, text=True)
         if result.returncode == 0:
             return jsonify({'output': result.stdout.strip(), 'error': result.stderr.strip()}), 200
         else:
@@ -22,6 +22,7 @@ def run_python():
     
 @app.route('/set-user', methods=['POST'])
 def set_user():
+    
     python_file = './setuser.py'
     param1 = request.args.get('username')
 
@@ -35,7 +36,8 @@ def set_user():
         return jsonify({'error': str(e)}), 500
     
 # NEW ROUTE TO HANDLE THE "/GET-PLAYER" REQUEST
-@app.route('/get-player', methods=['POST'])
+# TODO: REDUNDANT CODE
+@app.route('/get-player', methods=['GET'])
 def get_player():
     try: 
         # FIXME: SET THE CORRECT URL
@@ -65,6 +67,24 @@ def get_target():
             return jsonify({'secret_target': secret_target},{'secret_guess': secret_guess}), 200
         else: 
             return jsonify({'error': 'Failed to retrive player alias'}), response.status_code
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/get-bets', methods=['GET'])
+def get_bets():
+    try:
+        # FIXME: SET THE CORRECT URL
+        response = requests.get('http://localhost:2000/get-bets')
+        
+        if response.status_code == 200:
+            data = response.json()
+            bets = response['bets']
+            
+            bets = ["LOW", "HIGH", "RED", "BLACK", "ODD", "EVEN"]            
+            return jsonify({'bets': bets}), 200
+        else: 
+            return jsonify({'error': 'Failed to retrieve the bets'}), response.status_code
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
