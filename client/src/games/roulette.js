@@ -55,9 +55,9 @@ class Roulette extends React.Component {
   componentDidMount() {
     //grab here user data from database and set state with that data
   }
-  
+
   isSpinning = (isspinning) => {
-    isspinning === true ? this.setState({spinning: true}) : this.setState({spinning: false})
+    isspinning === true ? this.setState({ spinning: true }) : this.setState({ spinning: false })
   }
 
   //handling losing
@@ -68,7 +68,7 @@ class Roulette extends React.Component {
       losses: this.state.losses + 1,
     }, () => {
       //creating the object to send to mongodb and putting in callback to make sure the state is updated before sending data to database
-     
+
 
       //and reseting the game
       this.resetGame();
@@ -87,7 +87,7 @@ class Roulette extends React.Component {
       coins: this.state.coins + (multi * parseInt(this.state.chip))
     }, () => {
       //creating the object to send to mongodb and putting in callback to make sure the state is updated before sending data to database
-      
+
 
       //and reseting the game
       this.resetGame();
@@ -237,10 +237,10 @@ class Roulette extends React.Component {
     return (
       <Container>
         <Row className="justify-items-center pt-2">
-        <Logo/>
+          <Logo />
           <Container fluid className="table">
             <Row>
-              <Col className="mx-5">
+              <Col>
                 <RouletteTable
                   //ROWS//
                   firstRow={this.state.firstRow}
@@ -300,13 +300,12 @@ class Roulette extends React.Component {
           <Container fluid className="table">
             <Row>
               <Col className="text-light-gold">
-              Your bets: {this.state.arr.join(", ")}
+                Your bets: {this.state.arr.join(", ")}
               </Col>
             </Row>
-            
           </Container>
+          <Chat/>
         </Row>
-        <Chat/>
       </Container>
     )
   }
@@ -316,7 +315,8 @@ export default Roulette;
 
 
 
-  //STILL NEED TO CREATE FUNCTIONALITY FOR 
+//STILL NEED TO CREATE FUNCTIONALITY FOR 
 
-  //Basket, or a five number bet, and allows players to bet on the zero, double zero, 1, 2, and 3. Payout – 6:1.
+  //Basket, or a five number bet, and allows players to bet on the zero, double zero, 1, 2, and 3. Payout – 6:1.  //Basket, or a five number bet, and allows players to bet on the zero, double zero, 1, 2, and 3. Payout – 6:1.
 
+//Basket, or a five number bet, and allows players to bet on the zero, double zero, 1, 2, and 3. Payout – 6:1.
