@@ -5,6 +5,49 @@ import requests
 
 app = Flask(__name__)
 CORS(app)  # This will allow CORS for all origins
+data_store = []
+secret_target=-1
+secret_guess=-1
+hardware_id=-1
+
+@app.route('/set-secret-guess', methods=['POST'])
+def set_data_guess():
+    global secret_guess
+    # Get the JSON data from the request
+    data = request.get_json()
+    # Store the data in the in-memory list
+    secret_guess=data.get('guess', -1)
+    return jsonify({"message": "Data received successfully", "data": secret_guess}),200
+
+@app.route('/set-secret-target', methods=['POST'])
+def set_data_target():
+    global secret_target
+    # Get the JSON data from the request
+    data = request.get_json()
+    # Store the data in the in-memory list
+    secret_target=data.get('target', -1)
+    return jsonify({"message": "Data received successfully", "data": secret_target}),200
+
+@app.route('/set-secret-target', methods=['POST'])
+def set  _hardware_id():
+    global hardware_id
+    # Get the JSON data from the request
+    data = request.get_json()
+    # Store the data in the in-memory list
+    hardware_id=data.get('hardware_id', -1)
+    return jsonify({"message": "Data received successfully", "data": hardware_id}),200
+
+@app.route('/get-secret-target', methods=['GET'])
+def get_secret_target():
+    return jsonify({'output': secret_target}), 200
+
+@app.route('/get-secret-guess', methods=['GET'])
+def get_secret_guess():
+    return jsonify({'output': secret_guess}), 200
+
+@app.route('/get-hardware-id', methods=['GET'])
+def get_hardware_id():
+    return jsonify({'output': hardware_id}), 200
 
 @app.route('/run-python', methods=['GET'])
 def run_python():
