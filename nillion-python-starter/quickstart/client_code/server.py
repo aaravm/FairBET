@@ -20,6 +20,18 @@ def run_python():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
+@app.route('/get-result', methods=['GET'])
+def get_result():
+    python_file = './return_slots.py'
+    try:
+        result = subprocess.run(['python3', python_file], capture_output=True, text=True)
+        if result.returncode == 0:
+            return jsonify({'output': result.stdout.strip(), 'error': result.stderr.strip()}), 200
+        else:
+            return jsonify({'output': result.stdout.strip(), 'error': result.stderr}), result.returncode
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500  
+    
 @app.route('/set-user', methods=['POST'])
 def set_user():
     
@@ -37,6 +49,8 @@ def set_user():
     
 # NEW ROUTE TO HANDLE THE "/GET-PLAYER" REQUEST
 # TODO: REDUNDANT CODE
+
+
 @app.route('/get-player', methods=['GET'])
 def get_player():
     try: 

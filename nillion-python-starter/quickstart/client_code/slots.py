@@ -3,6 +3,8 @@ import aiohttp
 import py_nillion_client as nillion
 import os
 import random
+from flask import jsonify
+
 
 from py_nillion_client import NodeKey, UserKey
 from dotenv import load_dotenv
@@ -16,26 +18,41 @@ home = os.getenv("HOME")
 load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
 
 
-async def fetch_player_alias():
-    url = "http://localhost:5000/get-player"
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            if response.status == 200:
-                data = await response.json()
-                return data['player_alias']
-            else: 
-                print(f"Failed to get player alias: {response.status}")
-                return None            
+# async def fetch_player_alias():
+#     url = "http://localhost:5000/get-player"
+#     async with aiohttp.ClientSession() as session:
+#         async with session.get(url) as response:
+#             if response.status == 200:
+#                 data = await response.json()
+#                 return data['player_alias']
+#             else: 
+                # print(f"Failed to get player alias: {response.status}")
+#                 return None            
             
-async def fetch_bets():
-    url = "http://localhost:5000/get-bets"
+async def fetch_target():
+    url = "http://localhost:2000/get-secret-target"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response: 
             if response.status == 200:
                 data= await response.json()
-                return data 
+                secret_target = data.get('secret_target', 'SECRET_TARGET')
+            
+                return jsonify({'secret_target': secret_target}), 200
             else:
-                print(f"FAILED TO RETRIVE BETS: {response.status}")
+                # print(f"FAILED TO RETRIVE BETS: {response.status}")
+                return None
+            
+async def fetch_guess():
+    url = "http://localhost:2000/get-secret-guess"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response: 
+            if response.status == 200:
+                data= await response.json()
+                secret_guess = data.get('secret_guess', 'SECRET_GUESS')
+            
+                return jsonify({'secret_guess': secret_guess}), 200
+            else:
+                # print(f"FAILED TO RETRIVE BETS: {response.status}")
                 return None
         
 def generate_secret_target(target):
@@ -146,6 +163,11 @@ async def main():
     SECRET_TARGETS = generate_secret_target(random_number)
     SECRET_GUESS = 106
 
+    # target = await fetch_target()
+    # guess = await fetch_guess()
+    
+    # FIXMEss
+
     MANAGER = "GAME_MANAGER"
     
     # PLAYER
@@ -206,9 +228,7 @@ async def main():
     manager_secrets = nillion.NadaValues(
         {f"SECRET_TARGETS_{i}": nillion.SecretInteger(SECRET_TARGETS[i]) for i in range(len(SECRET_TARGETS))}
     )
-    
-    print(manager_secrets)
-    
+        
     permissions = nillion.Permissions.default_for_user(player_user_id)    
     permissions.add_compute_permissions({PLAYER_CLIENT.user_id: {PROGRAM_ID}})
     permissions.add_compute_permissions({MANAGER_CLIENT.user_id: {PROGRAM_ID}})
@@ -265,14 +285,14 @@ async def main():
         receipt_compute
     )
 
-    print(f"BLIND COMPUTATION COMPLETE: {compute_id}")
+    # print(f"BLIND COMPUTATION COMPLETE: {compute_id}")
 
     # RETURN THE COMPUTATION RESULTS
-    print(f"THE COMPUTATION WAS SENT TO THE NETWORK -> ID: {compute_id}")
+    # print(f"THE COMPUTATION WAS SENT TO THE NETWORK -> ID: {compute_id}")
     while True:
         compute_event = await MANAGER_CLIENT.next_compute_event()
         if isinstance(compute_event, nillion.ComputeFinishedEvent):
-            print(f"🖥️  The result is: {compute_event.result.value}")
+            print(compute_event.result.value)
             return compute_event.result.value    
     
 if __name__ == "__main__":

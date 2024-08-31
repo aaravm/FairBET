@@ -26,116 +26,21 @@ def string_to_int(s):
     hex_dig = hash_object.hexdigest()           # GET HEXADECIMAL DIGEST
     return int(hex_dig,  16)                    # CONVERT HEX TO INTEGER 
     
-async def fetch_player_alias():
-    url = "http://localhost:5000/get-player"
+async def fetch_hardware_id():
+    url = "http://localhost:2000/get-hardware-id"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             if response.status == 200:
                 data = await response.json()
-                return data["player_alias"]
+                return data["hardware-id"]
             else:
-                print(f"Failed to get player alias: {response.status}")
+                print(f"Failed to get hardware-id: {response.status}")
                 return None
-    
-def get_system_info():
-    """
-    Retrives system inforamtion including processor, RAM, OS, and python version.
-    Returns a dictionary with the collected data.
-    """
-    
-    # GET GENERAL SYSTEM INFORAMATION
-    system_info = {
-        "processor": platform.processor(),
-        "ram": f"{round(psutil.virtual_memory().total / (1024.0 ** 3))} GB",
-        "os": platform.platform(),
-        "python_version": platform.python_version()
-    }
-    
-    try: 
-        # FETCH MAC ADDRESS
-        mac_address = ':'.join(['{:02x}'.format((uuid.getnode() >> elements) & 0xff) for elements in range(0, 2 * 6, 8)][::-1])
-        system_info['mac_address'] = mac_address
-        
-        # SYSTEM UUID FETCHING BASED ON OS
-        if platform.system() == "Windows":
-            cmd = 'wmic csproduct get uuid'
-            uuid = subprocess.check_output(cmd).decode().split('\n')[1].strip()
-        elif platform.system() == "Linux":
-            cmd = 'dmidecode -s system-uuid'
-            uuid = subprocess.check_output(cmd, shell=True).decode().strip()
-        elif platform.system() == "Darwin":
-            cmd = 'system_profiler SPHardwareDataType'
-            output = subprocess.check_output(cmd, shell=True).decode()
-            uuid_line = next(line for line in output.split('\n') if 'UUID' in line)
-            uuid = uuid_line.split(': ')[1].strip()
-        else:
-            uuid = "UUID not available for this OS"
-            
-        system_info['uuid'] = uuid
-        print("UUID: {}", uuid)
-        
-    except Exception as e: 
-        system_info['error_uuid'] = str(e)
-        
-    try:
-        # FETCH MOTHERBOARD SERIAL NUMBER
-        
-        if platform.system() == "Linux":
-            # command = "sudo dmidecode -t baseboard | grep Serial"
-            # serial_number = subprocess.check_output(command, shell=True).decode().split(':')[1].strip()
-            serial_number = "Li"
-            system_info['serial_number'] = serial_number
-        elif platform.system() == "Darwin":
-            # command = "system_profiler SPHardwareDataType | grep 'Serial Number (system)'"
-            # serial_number = subprocess.check_output(command, shell=True).decode().split(':')[1].strip()
-            serial_number = "Darw"
-            system_info['serial_number'] = serial_number
-        elif platform.system() == "Windows":
-            command = "wmic baseboard get serialnumber"
-            serial_number = subprocess.check_output(command, shell=True).decode().split('\n')[1].strip()
-            system_info['serial_number'] = serial_number
-            
-                
-    except Exception as e:
-        system_info['error_serial'] = str(e)
-        
-    return system_info
 
+async def main():  
 
-def load_creds(file_path):
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
-            return json.load(file)
-    return {"PLAYERS":{}}
-
-
-def save_creds(file_path, data):
-    with open(file_path, 'w') as file:
-        json.dump(data, file, indent=4)
-        
-
-def load_player_creds(file_path, user_id, party_id, party_name): 
-    credentials = load_creds(file_path)
-    player_data = {
-        "user_id": user_id,
-        "party_id": party_id,
-        "party_name": party_name
-    }
-    
-    credentials["PLAYERS"][party_name] = player_data
-    save_creds(file_path, credentials)
-
-async def main():
-    
-    # PLAYER_ALIAS = await fetch_player_alias()
-    # if PLAYER_ALIAS:
-    #     print(f"Player alias retrieved: {PLAYER_ALIAS}")
-    #     # Now you can use PLAYER_ALIAS in the rest of your logic
-    # else:
-    #     print("Could not retrieve PLAYER_ALIAS")   
     
     PLAYER_ALIAS = "PLAYER"
-        
          
     # GET NILLION-DEVNET CREDENTIALS
     cluster_id = os.getenv("NILLION_CLUSTER_ID")
@@ -150,9 +55,6 @@ async def main():
     
     party_id = player.party_id
     user_id = player.user_id    
-    
-    # PUSH THE PLAYER CREDENTIALS IN THE CREDENTIAL STORE
-    load_player_creds("credential_store.json", user_id, party_id, PLAYER_ALIAS)
     
     # CREATE THE PAYMENTS CONFIG, SET UP NILLION WALLET etc.
     payments_config = create_payments_config(chain_id, grpc_endpoint)
@@ -179,13 +81,11 @@ async def main():
     )
     
     PROGRAM_ID = f'{user_id}/{PROGRAM_NAME}'
+
+    serial_number = await fetch_hardware_id()
+    serial_number_int = string_to_int(serial_number)
     
-    # GET ALL THE NECESSARY USER CREDENTIALS WHICH CAN BE USED FOR HARWARE BAN: SERIAL NUMBER, PUBLIC KEY 
-    # GET THE NECESSARY SYSTEM IDENTIFIERS
-    system_info = get_system_info()
-    serial_number = system_info['serial_number']
-    
-    print(f"SERIAL NUMBER: {serial_number}")
+    print(f"SERIAL NUMBER: {serial_number_int}")
     print(f"WALLET ADDRESS: {payments_wallet.address()}")
     
     # FIXME: MY SIZE IS TOO LARGE, I CANNOT ADJUST IN NILLION SECRETS
