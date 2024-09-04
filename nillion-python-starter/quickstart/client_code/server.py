@@ -28,11 +28,12 @@ def set_data_target():
     secret_target=data.get('target', -1)
     return jsonify({"message": "Data received successfully", "data": secret_target}),200
 
-@app.route('/set-secret-target', methods=['POST'])
-def set  _hardware_id():
+@app.route('/set-secret-hardawre-id', methods=['POST'])
+def set_hardware_id():
     global hardware_id
     # Get the JSON data from the request
     data = request.get_json()
+
     # Store the data in the in-memory list
     hardware_id=data.get('hardware_id', -1)
     return jsonify({"message": "Data received successfully", "data": hardware_id}),200
