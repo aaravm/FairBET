@@ -55,14 +55,14 @@ def get_hardware_id():
 @app.route('/run-python', methods=['GET'])
 def run_python():
     python_file = './verify_id.py'
-    param1 = request.args.get('username')
 
     try:
-        result = subprocess.run(['python3', python_file, param1], capture_output=True, text=True)
+        result = subprocess.run(['python3', python_file], capture_output=True, text=True)
         if result.returncode == 0:
             return jsonify({'output': result.stdout.strip(), 'error': result.stderr.strip()}), 200
         else:
             return jsonify({'output': result.stdout, 'error': result.stderr}), result.returncode
+        # return jsonify({'output': "hello", 'error': "result.stderr"}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
@@ -70,13 +70,16 @@ def run_python():
 def get_result():
     python_file = './return_slots.py'
     try:
-        # result = subprocess.run(['python3', python_file], capture_output=True, text=True)
+        result = subprocess.run(['python3', python_file], capture_output=True, text=True)
         # result = asyncio.run(get_result_value())
-        return jsonify({'output': False, 'error': "result"}), 200
-        # if result.returncode == 0:
-        #     return jsonify({'output': result.stdout.strip(), 'error': result.stderr.strip()}), 200
-        # else:
-        #     return jsonify({'output': result.stdout.strip(), 'error': result.stderr}), result.returncode
+        print(result)
+        # return jsonify({'output': result, 'error': "result"}), 200
+        if result.returncode == 0:
+            return jsonify({'output': result.stdout.strip(), 'error': result.stderr.strip()}), 200
+        else:
+            return jsonify({'output': result.stdout.strip(), 'error': result.stderr}), result.returncode
+    except subprocess.TimeoutExpired:
+        return jsonify({'error': 'Subprocess timed out'}), 504
     except Exception as e:
         return jsonify({'error': str(e)}), 500  
     
@@ -85,7 +88,7 @@ def set_user():
     
     python_file = './setuser.py'
     param1 = request.args.get('username')
-
+    # get_result_value
     try:
         result = subprocess.run(['python3', python_file,param1], capture_output=True, text=True)
         if result.returncode == 0:
@@ -103,7 +106,7 @@ def set_user():
 def get_player():
     try: 
         # FIXME: SET THE CORRECT URL
-        response = requests.get('http://localhost:2000/player')
+        response = requests.get('http://127.0.0.1:5000/player')
         
         if response.status_code == 200:
             data = response.json()
@@ -118,7 +121,7 @@ def get_player():
 def get_target():
     try: 
         # FIXME: SET THE CORRECT URL
-        response = requests.get('http://localhost:2000/secret')
+        response = requests.get('http://127.0.0.1:5000/secret')
         
         if response.status_code == 200:
             
@@ -137,7 +140,7 @@ def get_target():
 def get_bets():
     try:
         # FIXME: SET THE CORRECT URL
-        response = requests.get('http://localhost:2000/get-bets')
+        response = requests.get('http://127.0.0.1:5000/get-bets')
         
         if response.status_code == 200:
             data = response.json()

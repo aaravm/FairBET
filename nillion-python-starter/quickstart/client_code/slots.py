@@ -30,27 +30,32 @@ load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
 #                 return None            
             
 async def fetch_target():
-    url = "http://localhost:5000/get-secret-target"
+    url = "http://127.0.0.1:5000/get-secret-target"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response: 
             if response.status == 200:
                 data= await response.json()
                 secret_target = data.get('output', 'SECRET_TARGET')
+                # print(f"SECRET TARGET: {secret_target}")
                 return secret_target
+                # return jsonify({'output': secret_target}), 200
             else:
-                # print(f"FAILED TO RETRIVE BETS: {response.status}")
-                return 1
+                print(f"FAILED TO RETRIVE BETS: {response.status}")
+                return -2
             
 async def fetch_guess():
-    url = "http://localhost:5000/get-secret-guess"
+    url = "http://127.0.0.1:5000/get-secret-guess"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response: 
             if response.status == 200:
                 data= await response.json()
                 secret_guess = data.get('output', 'SECRET_GUESS')
+            
+                # return jsonify({'output': secret_guess}), 200
                 return secret_guess
             else:
-                return 1
+                print(f"FAILED TO RETRIVE BETS: {response.status}")
+                return -2
         
 def generate_secret_target(target):
     
@@ -160,6 +165,8 @@ async def main():
     target = await fetch_target()
     SECRET_GUESS = await fetch_guess()
     print(f"TARGET: {target}")
+    target = int(target)
+    
     print(f"GUESS: {SECRET_GUESS}")
 
     SECRET_TARGETS = generate_secret_target(target)
@@ -187,6 +194,7 @@ async def main():
         SECRET_GUESS = 109
     
     # FIXMEss
+    SECRET_GUESS = int(SECRET_GUESS)
 
     MANAGER = "GAME_MANAGER"
     

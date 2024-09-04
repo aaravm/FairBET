@@ -27,12 +27,12 @@ def string_to_int(s):
     return int(hex_dig,  16)                    # CONVERT HEX TO INTEGER 
     
 async def fetch_hardware_id():
-    url = "http://localhost:2000/get-hardware-id"
+    url = "http://127.0.0.1:5000/get-hardware-id"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             if response.status == 200:
                 data = await response.json()
-                return data["hardware-id"]
+                return data["output"]
             else:
                 print(f"Failed to get hardware-id: {response.status}")
                 return None
@@ -83,14 +83,15 @@ async def main():
     PROGRAM_ID = f'{user_id}/{PROGRAM_NAME}'
 
     serial_number = await fetch_hardware_id()
-    serial_number_int = string_to_int(serial_number)
+    # serial_number_int = string_to_int(serial_number)
     
-    print(f"SERIAL NUMBER: {serial_number_int}")
+    print(f"SERIAL NUMBER: {serial_number}")
     print(f"WALLET ADDRESS: {payments_wallet.address()}")
     
     # FIXME: MY SIZE IS TOO LARGE, I CANNOT ADJUST IN NILLION SECRETS
     wallet_addr_int = string_to_int(payments_wallet.address())
-    sn_int = string_to_int(serial_number)
+    # sn_int = string_to_int(serial_number)
+    sn_int = serial_number
     
     NEW_SECRETS = nillion.NadaValues(
         {
