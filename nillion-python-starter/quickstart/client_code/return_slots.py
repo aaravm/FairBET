@@ -42,10 +42,6 @@ async def get_result_value():
         return "Jinesh123"
 
 
-async def main():
-    result = await get_result_value()
-    return result
-
 if __name__ == "__main__":
-    result = asyncio.run(main())
+    result = asyncio.run(get_result_value())
     print(f"{result}",end='')

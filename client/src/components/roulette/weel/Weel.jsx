@@ -133,6 +133,8 @@ class Weel extends React.Component {
   }
 
   renderNumber = () => {
+    this.props.setTarget(this.state.text);
+    
     return (
       <h1 className="blinky-number display-4 pt-1 m-0">{this.state.text}</h1>
     )

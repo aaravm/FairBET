@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import subprocess
 import requests
+from return_slots import get_result_value
+import asyncio
 
 app = Flask(__name__)
 CORS(app)  # This will allow CORS for all origins
@@ -68,11 +70,13 @@ def run_python():
 def get_result():
     python_file = './return_slots.py'
     try:
-        result = subprocess.run(['python3', python_file], capture_output=True, text=True)
-        if result.returncode == 0:
-            return jsonify({'output': result.stdout.strip(), 'error': result.stderr.strip()}), 200
-        else:
-            return jsonify({'output': result.stdout.strip(), 'error': result.stderr}), result.returncode
+        # result = subprocess.run(['python3', python_file], capture_output=True, text=True)
+        # result = asyncio.run(get_result_value())
+        return jsonify({'output': False, 'error': "result"}), 200
+        # if result.returncode == 0:
+        #     return jsonify({'output': result.stdout.strip(), 'error': result.stderr.strip()}), 200
+        # else:
+        #     return jsonify({'output': result.stdout.strip(), 'error': result.stderr}), result.returncode
     except Exception as e:
         return jsonify({'error': str(e)}), 500  
     

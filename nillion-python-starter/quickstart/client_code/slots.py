@@ -30,30 +30,27 @@ load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
 #                 return None            
             
 async def fetch_target():
-    url = "http://localhost:2000/get-secret-target"
+    url = "http://localhost:5000/get-secret-target"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response: 
             if response.status == 200:
                 data= await response.json()
-                secret_target = data.get('secret_target', 'SECRET_TARGET')
-            
-                return jsonify({'secret_target': secret_target}), 200
+                secret_target = data.get('output', 'SECRET_TARGET')
+                return secret_target
             else:
                 # print(f"FAILED TO RETRIVE BETS: {response.status}")
-                return None
+                return 1
             
 async def fetch_guess():
-    url = "http://localhost:2000/get-secret-guess"
+    url = "http://localhost:5000/get-secret-guess"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response: 
             if response.status == 200:
                 data= await response.json()
-                secret_guess = data.get('secret_guess', 'SECRET_GUESS')
-            
-                return jsonify({'secret_guess': secret_guess}), 200
+                secret_guess = data.get('output', 'SECRET_GUESS')
+                return secret_guess
             else:
-                # print(f"FAILED TO RETRIVE BETS: {response.status}")
-                return None
+                return 1
         
 def generate_secret_target(target):
     
@@ -155,16 +152,39 @@ async def main():
     
     # PLAYER_ALIAS = await fetch_player_alias()
         
-    # SECRET_GUESSES = await fetch_bets()
+    # SECRET_GUESSES = await fetch_guess()
+    # print(  SECRET_GUESSES)
     PLAYER_ALIAS = "PLAYER"
     
-    random_number = random.randint(0,36)
-    
-    SECRET_TARGETS = generate_secret_target(random_number)
-    SECRET_GUESS = 106
+    # random_number = random.randint(0,36)
+    target = await fetch_target()
+    SECRET_GUESS = await fetch_guess()
+    print(f"TARGET: {target}")
+    print(f"GUESS: {SECRET_GUESS}")
 
-    # target = await fetch_target()
-    # guess = await fetch_guess()
+    SECRET_TARGETS = generate_secret_target(target)
+    # SECRET_GUESS = 106
+
+    
+
+    if SECRET_GUESS == "3rd 12":
+        SECRET_GUESS = 105
+    if SECRET_GUESS == "2nd 12":
+        SECRET_GUESS = 104
+    if SECRET_GUESS == "1st 12":
+        SECRET_GUESS = 103
+    if SECRET_GUESS == "Even":
+        SECRET_GUESS = 102
+    if SECRET_GUESS == "Odd":
+        SECRET_GUESS = 101
+    if SECRET_GUESS == "1 to 18":
+        SECRET_GUESS = 106
+    if SECRET_GUESS == "19 to 36":
+        SECRET_GUESS = 107
+    if SECRET_GUESS == "Red":
+        SECRET_GUESS = 108
+    if SECRET_GUESS == "Black":
+        SECRET_GUESS = 109
     
     # FIXMEss
 

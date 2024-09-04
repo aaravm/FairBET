@@ -21,6 +21,29 @@ import Chat from '../components/Chat';
 
 
 class Roulette extends React.Component {
+  async setGuess(){
+    const response = await fetch('http://127.0.0.1:5000/set-secret-guess', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ guess: this.state.arr[0] }),
+    });
+    const body = await response.text();
+    console.log(body);
+  }
+
+  async setTarget(num){
+    const response = await fetch('http://127.0.0.1:5000/set-secret-target', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ target: num }),
+    });
+    const body = await response.text();
+    console.log(body);
+  }
 
   state = {
     num: "", //winning number
@@ -57,7 +80,12 @@ class Roulette extends React.Component {
   }
 
   isSpinning = (isspinning) => {
-    isspinning === true ? this.setState({ spinning: true }) : this.setState({ spinning: false })
+    if(isspinning === true){
+      this.setGuess();
+      this.setState({ spinning: true })
+    } else {
+      this.setState({ spinning: false })
+    }
   }
 
   //handling losing
@@ -290,6 +318,7 @@ class Roulette extends React.Component {
                 <Weel
                   isSpinning={this.isSpinning}
                   updateNum={this.updateNum}
+                  setTarget={this.setTarget}
                   num={this.state.num}
                   arr={this.state.arr}
                   count={this.state.count}
