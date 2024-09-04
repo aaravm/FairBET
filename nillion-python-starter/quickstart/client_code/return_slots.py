@@ -14,25 +14,25 @@ import asyncio
 async def get_result_value():
     try:
     # Run player_client.py
-        # current_dir = os.getcwd()
-        # target_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ''))
+        current_dir = os.getcwd()
+        target_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ''))
 
-        # # Determine the command to run based on the current directory
-        # if current_dir != target_dir:
-        #     command = f"cd {target_dir} && python3 slots.py"
-        # else:
-        #     command = "python3 slots.py"
+        # Determine the command to run based on the current directory
+        if current_dir != target_dir:
+            command = f"cd {target_dir} && python3 slots.py"
+        else:
+            command = "python3 slots.py"
 
-        # # Run the command
-        # result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
-        # # Extract the value of compute_event.result.value from the output
-        # for line in result.stdout.split('\n'):
-        #     if "{" in line:
-        #         value = line.split()[-1]
-        #         if value.endswith('}'):
-        #             value = value[:-1]
+        # Run the command
+        result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
+        # Extract the value of compute_event.result.value from the output
+        for line in result.stdout.split('\n'):
+            if "{" in line:
+                value = line.split()[-1]
+                if value.endswith('}'):
+                    value = value[:-1]
                 
-        #         return value
+                return value
         
         # If value doesn't get returned, use this defaultr instead
         result_value= "Jinesh123"
