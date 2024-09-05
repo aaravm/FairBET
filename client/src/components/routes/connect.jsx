@@ -1,8 +1,8 @@
 import React from "react";
-import { useStateContext } from "../context/index";
+import { useStateContext } from "../../context/index";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = () => {
+const Connect = () => {
     // const navigate = useNavigate();
     const { account, connect } = useStateContext();
 
@@ -11,6 +11,7 @@ const Navbar = () => {
 
             <div>
                 <button
+                    className="connect"
                     type='button'
                     onClick={connect}
                 >
@@ -22,4 +23,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar
+export default Connect
