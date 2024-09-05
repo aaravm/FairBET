@@ -4,7 +4,7 @@ const StartGameBlock = (props) => {
     return (
         <React.Fragment>
             <div onClick={()=>props.Player_step(props.Counter)} className="yes">
-                <span>Еще</span>
+                <span>Hit</span>
             </div>
             <div className="player">
                 <span>Player</span>

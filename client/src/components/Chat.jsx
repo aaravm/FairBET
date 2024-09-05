@@ -2,10 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { Button, Container, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import './Chat.css'; // Assuming custom CSS is being used
+import {
+  SignProtocolClient,
+  SpMode,
+  EvmChains,
+  delegateSignAttestation,
+  delegateSignRevokeAttestation,
+  delegateSignSchema,
+} from "@ethsign/sp-sdk";
+import { privateKeyToAccount } from "viem/accounts";
+import {useStateContext} from "../context/index"
+const privateKey = "0x2b45672b49ed7422d2cc12239c884fc9e7d4dc023a2f119c8873890c4771a49d"; // Optional
+
+const client = new SignProtocolClient(SpMode.OnChain, {
+  chain: EvmChains.baseSepolia,
+  account: privateKeyToAccount(privateKey), // Optional if you are using an injected provider
+});
+
 
 const Chat = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
+  const {account} = useStateContext();
 
   const handleChange = (e) => {
     setInput(e.target.value);
@@ -43,6 +61,11 @@ const Chat = () => {
         if (text.trim() === 'True.') {
           setMessages([...messages, { text: "WARNING: Don't use any vulgar words, else you'll get banned", sender: 'system' }]);
           alert("WARNING: Don't use any vulgar words, else you'll get banned");
+          const createAttestationRes = await client.createAttestation({
+            schemaId: "0x1cc",
+            data: { user_address: account },
+            indexingValue: account,
+          });
         }
       } catch (error) {
         console.error('Error making API call:', error);
