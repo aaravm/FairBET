@@ -19,7 +19,6 @@ import columnRight from '../components/roulette/table/rows/ColumnRight.json';
 import Logo from '../components/roulette/Logo';
 import Chat from '../components/Chat';
 
-
 class Roulette extends React.Component {
   async setGuess(){
     const response = await fetch('http://127.0.0.1:5000/set-secret-guess', {
