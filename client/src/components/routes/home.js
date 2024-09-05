@@ -5,14 +5,14 @@ import roulette from "./../../images//roulette-icon.png";
 import blackjack from "./../../images//blackjack-icon.png";
 
 
-const Home = () => {
+const Home = ({onSetConnect}) => {
     return (
         <div className="home">
             <div className="top">
                 <div className="navbar">
                     <div className="navbar-content">
                         <h1 className="title">FairBET</h1>
-                        <Connect/>
+                        <Connect onSetConnect={onSetConnect}/>
                     </div>
                 </div>
             </div>

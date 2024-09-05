@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useStateContext } from "../context/index";
 
-const Connect = () => {
+const Connect = ({onSetConnect}) => {
     // const navigate = useNavigate();
     const { account, connect } = useStateContext();
+
+    useEffect(() => {
+        if(!(account === "")){
+            onSetConnect(true);
+        }
+    }, [account]);
 
     return (
         <div>
