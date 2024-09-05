@@ -17,7 +17,8 @@ import fifthRow from '../components/roulette/table/rows/FifthRow.json';
 import columnLeft from '../components/roulette/table/rows/ColumnLeft.json';
 import columnRight from '../components/roulette/table/rows/ColumnRight.json';
 import Logo from '../components/roulette/Logo';
-import Chat from '../components/Chat';
+import ResultAlert from '../components/blackjack/ResultAlert';
+// import Chat from '../components/Chat';
 
 class Roulette extends React.Component {
   async setGuess(){
@@ -56,7 +57,9 @@ class Roulette extends React.Component {
     message: "Put your bets and spin the wheel!", //message
     extArr: [], //little trick: pushing number here if user win, so if it's empty, user loose
     //my JSON rows
-    firstRow, firstBorder, secondRow, secondBorder, thirdRow, thirdBorder, fourthRow, fifthRow, columnLeft, columnRight
+    firstRow, firstBorder, secondRow, secondBorder, thirdRow, thirdBorder, fourthRow, fifthRow, columnLeft, columnRight,
+
+    result: ''
   }
 
   //declaring here all the combinations, easier this way
@@ -265,6 +268,9 @@ class Roulette extends React.Component {
       <Container>
         <Row className="justify-items-center pt-2">
           <Logo />
+          <ResultAlert
+            Result={this.state.result}
+          />
           <Container fluid className="table">
             <Row>
               <Col>
@@ -332,7 +338,7 @@ class Roulette extends React.Component {
               </Col>
             </Row>
           </Container>
-          <Chat/>
+          {/* <Chat/> */}
         </Row>
       </Container>
     )
