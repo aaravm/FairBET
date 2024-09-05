@@ -2,23 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Container, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import './Chat.css'; // Assuming custom CSS is being used
-import {
-  SignProtocolClient,
-  SpMode,
-  EvmChains,
-  delegateSignAttestation,
-  delegateSignRevokeAttestation,
-  delegateSignSchema,
-} from "@ethsign/sp-sdk";
-import { privateKeyToAccount } from "viem/accounts";
 import {useStateContext} from "../context/index"
-const privateKey = "0x2b45672b49ed7422d2cc12239c884fc9e7d4dc023a2f119c8873890c4771a49d"; // Optional
-
-const client = new SignProtocolClient(SpMode.OnChain, {
-  chain: EvmChains.baseSepolia,
-  account: privateKeyToAccount(privateKey), // Optional if you are using an injected provider
-});
-
 
 const Chat = () => {
   const [input, setInput] = useState('');
@@ -49,23 +33,26 @@ const Chat = () => {
       setInput(''); // Clear the input box after sending
       try {
         const Your_API_Key = "AIzaSyCIAMgozAJIGHNQWpzmJgGCYY64QRMAwUo";
+        console.log("data",Your_API_Key)
         const genAI = new GoogleGenerativeAI(Your_API_Key);
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
         const prompt = `Tell me only in True or False that if I should ban the user if it uses this language: "${data}"`;
 
         const result = await model.generateContent(prompt);
+        console.log("result",result)
         const response = await result.response;
         const text = await response.text();
+        console.log("text",text)
         
         if (text.trim() === 'True.') {
           setMessages([...messages, { text: "WARNING: Don't use any vulgar words, else you'll get banned", sender: 'system' }]);
           alert("WARNING: Don't use any vulgar words, else you'll get banned");
-          const createAttestationRes = await client.createAttestation({
-            schemaId: "0x1cc",
-            data: { user_address: account },
-            indexingValue: account,
-          });
+          // const createAttestationRes = await client.createAttestation({
+          //   schemaId: "0x1cc",
+          //   data: { user_address: account },
+          //   indexingValue: account,
+          // });
         }
       } catch (error) {
         console.error('Error making API call:', error);
