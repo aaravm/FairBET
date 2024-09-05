@@ -1,6 +1,5 @@
 import React from "react";
-import { useStateContext } from "../../context/index";
-import { useNavigate } from "react-router-dom";
+import { useStateContext } from "../context/index";
 
 const Connect = () => {
     // const navigate = useNavigate();

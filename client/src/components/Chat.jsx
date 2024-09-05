@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Container, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
+import { Button, Container, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import './Chat.css'; // Assuming custom CSS is being used
 
