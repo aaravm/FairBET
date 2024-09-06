@@ -18,7 +18,7 @@ import columnLeft from '../components/roulette/table/rows/ColumnLeft.json';
 import columnRight from '../components/roulette/table/rows/ColumnRight.json';
 import Logo from '../components/roulette/Logo';
 import ResultAlert from '../components/blackjack/ResultAlert';
-// import Chat from '../components/Chat';
+import Chat from '../components/Chat';
 
 class Roulette extends React.Component {
   async setGuess(){
@@ -338,7 +338,7 @@ class Roulette extends React.Component {
               </Col>
             </Row>
           </Container>
-          {/* <Chat/> */}
+          <Chat/>
         </Row>
       </Container>
     )

@@ -3,16 +3,24 @@ import { Button, Container, Row, Col, InputGroup, FormControl } from 'react-boot
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import './Chat.css'; // Assuming custom CSS is being used
 import {useStateContext} from "../context/index"
+import { useNavigate } from 'react-router-dom';
+const privateKey = "0x2b45672b49ed7422d2cc12239c884fc9e7d4dc023a2f119c8873890c4771a49d"; // Optional
+
+const client = new SignProtocolClient(SpMode.OnChain, {
+  chain: EvmChains.baseSepolia,
+  account: privateKeyToAccount(privateKey), // Optional if you are using an injected provider
+});
+
 import {
   SignProtocolClient,
   SpMode,
   EvmChains,
+  IndexService,
   delegateSignAttestation,
   delegateSignRevokeAttestation,
   delegateSignSchema,
 } from "@ethsign/sp-sdk";
 import { privateKeyToAccount } from "viem/accounts";
-import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {
   const [input, setInput] = useState('');
@@ -24,6 +32,13 @@ const Chat = () => {
   const handleChange = (e) => {
     setInput(e.target.value);
   };
+
+  // Remove user's account when he gets banned
+  useEffect = () => {
+    setAccount('')
+    navigate('../')
+  }
+
   const client = new SignProtocolClient(SpMode.OnChain, {
     chain: EvmChains.baseSepolia,
     account: privateKeyToAccount(privateKey), // Optional if you are using an injected provider
@@ -41,6 +56,12 @@ const Chat = () => {
   useEffect(() => {
     localStorage.setItem('messages', JSON.stringify(messages));
   }, [messages]);
+
+  const checkIfUserIsBanned = async (address) => {
+    const indexService = new IndexService("testnet");
+    const res = await indexService.queryAttestation("onchain_evm_80001_0x1");
+    console.log("res",res);
+  }
 
   const handleSendMessage = async () => {
     if (input.trim()) {
@@ -60,16 +81,18 @@ const Chat = () => {
         const response = await result.response;
         const text = await response.text();
         console.log("text",text)
-        
+        checkIfUserIsBanned(account);
+
         if (text.trim() === 'True.') {
           setMessages([...messages, { text: "WARNING: Don't use any vulgar words, else you'll get banned", sender: 'system' }]);
           alert("WARNING: Don't use any vulgar words, else you'll get banned");
+          console.log("create attestation");
           const createAttestationRes = await client.createAttestation({
             schemaId: "0x1cc",
             data: { user_address: account },
             indexingValue: account,
           });
-          console.log(createAttestationRes);
+
         }
       } catch (error) {
         console.error('Error making API call:', error);
