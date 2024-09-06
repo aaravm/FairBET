@@ -37,6 +37,7 @@ export const StateContextProvider = ({ children }) => {
         console.log(ip);
         res.rows.forEach((element) => {
         console.log("element",element.indexingValue);
+        console.log("address",address);
         if(element.indexingValue === address ){
             count++;
         }
@@ -51,6 +52,8 @@ export const StateContextProvider = ({ children }) => {
         return false
     }
     const connect = async () => {
+   
+        setIsLoading(true)
         if (typeof window.ethereum !== "undefined") {
             const { ethereum } = window;
             try {
@@ -60,44 +63,59 @@ export const StateContextProvider = ({ children }) => {
             }
 
             const accounts = await ethereum.request({ method: "eth_accounts" })
-            console.log(accounts)
-            window.location.reload(false);
+            console.log("aa", accounts)
+            const chain = await window.ethereum.request({ method: "eth_chainId" });
+            let chainId = chain;
+            console.log("chain ID:", chain);
+            console.log("global Chain Id:", chainId);
+            if (accounts.length !== 0) {
+                const output = await checkIfUserIsBanned(accounts[0]);
+                console.log("output",output);
+                if(output){
+                    alert("user is banned");
+                    return;
+                }
+                setAccount(accounts[0]);
+                console.log("Found an authorized account:", accounts);
+                try{
+                    if (ethereum) {
+                        const provider = new ethers.providers.Web3Provider(ethereum);
+                        const signer = provider.getSigner();
+                        const contract = new ethers.Contract(tokenContract, tokenABI, signer);
+                        try{
+                            const result = contract.fundUser();
+                            console.log("result:::", result);
+                        }
+                        catch(e){
+                            console.log(e);
+                        }
+                       
+                    }
+
+                }
+                catch (error) {
+                    if (error?.data?.message.includes("revert")) {
+                        console.error("Transaction reverted: User already funded.");
+                        setError("You have already been funded. No need for further funding.");
+                    } else {
+                        console.error("Error occurred during funding:", error);
+                        setError("An unexpected error occurred. Please try again later.");
+                    }
+                }
+                
+
+            } else {
+                console.log("No authorized account found");
+            }
         } else {
             alert("Please install MetaMask");
         }
+        setIsLoading(false)
     }
     
-    
-    // useEffect(() => {
-    //     // Function to dynamically load the Pyodide script
-    //     const loadPyodideScript = async () => {
-    //       // Check if Pyodide is already loaded
-    //       if (window.loadPyodide) {
-    //         const pyodideInstance = await window.loadPyodide();
-    //         setPyodide(pyodideInstance);
-    //       } else {
-    //         // Create a new script element
-    //         const script = document.createElement('script');
-    //         script.src = 'https://cdn.jsdelivr.net/pyodide/v0.23.0/full/pyodide.js';
-    //         script.async = true;
-    //         script.onload = async () => {
-    //           // After the script is loaded, initialize Pyodide
-    //           const pyodideInstance = await window.loadPyodide();
-    //           setPyodide(pyodideInstance);
-    //         };
-    //         script.onerror = () => {
-    //           console.error('Failed to load Pyodide script');
-    //         };
-    //         console.log("pyodide is loaded");
-    //         document.body.appendChild(script);
-    //       }
-    //     };
-    
-    //     loadPyodideScript();
-    //   }, []);
-    const tokenContract = "0x32efFB7E5D75d31D0674c0D3091A415115AF8204"
+    const tokenContract = "0x8716bEBd0eB9c6A68d2E2DEC9Af46D58A55a7Af0"
 
-    const Address = async () => {
+    const Address = async () => { 
         const { ethereum } = window;
         if (!ethereum) {
             console.log("Make sure you have metamask!");
@@ -111,6 +129,12 @@ export const StateContextProvider = ({ children }) => {
         console.log("chain ID:", chain);
         console.log("global Chain Id:", chainId);
         if (accounts.length !== 0) {
+            // const output = await checkIfUserIsBanned(accounts[0]);
+            // console.log("output",output);
+            // if(output){
+            //     alert("user is banned");
+            //     return;
+            // }
             setAccount(accounts[0]);
             console.log("Found an authorized account:", accounts);
             const { ethereum } = window;
@@ -118,47 +142,18 @@ export const StateContextProvider = ({ children }) => {
                 const provider = new ethers.providers.Web3Provider(ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract(tokenContract, tokenABI, signer);
-                contract.fundUser();
+                try{
+                    contract.fundUser();
+                }
+                catch(e){
+                    console.error("user already funded", e)
+                }
             }
 
         } else {
             console.log("No authorized account found");
         }
     }
-
-    useEffect(() => {
-        Address();
-        console.log(account);
-    }, [])
-
-
-    // useEffect(() => {
-    //     console.log("output:", output);
-
-    //     const handleEthereum = async () => {
-    //         if(output==='') return;
-    //         if (!output) {
-    //             alert("Fuck off from this website");
-    //         } else {
-    //             if (typeof window.ethereum !== "undefined") {
-    //                 const { ethereum } = window;
-    //                 try {
-    //                     await ethereum.request({ method: "eth_requestAccounts" });
-    //                 } catch (error) {
-    //                     console.log(error);
-    //                 }
-
-    //                 const accounts = await ethereum.request({ method: "eth_accounts" });
-    //                 console.log(accounts);
-    //                 window.location.reload(false);
-    //             } else {
-    //                 alert("Please install MetaMask");
-    //             }
-    //         }
-    //     };
-
-    //     handleEthereum(); // Call the async function
-    // }, [output]);
 
 
 
