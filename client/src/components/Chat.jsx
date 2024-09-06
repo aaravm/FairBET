@@ -27,10 +27,10 @@ const Chat = () => {
   };
 
   // Remove user's account when he gets banned
-  useEffect = () => {
-    setAccount('')
-    navigate('../')
-  }
+  // useEffect = () => {
+  //   setAccount('')
+  //   navigate('../')
+  // }
 
   const client = new SignProtocolClient(SpMode.OnChain, {
     chain: EvmChains.baseSepolia,
@@ -52,8 +52,23 @@ const Chat = () => {
 
   const checkIfUserIsBanned = async (address) => {
     const indexService = new IndexService("testnet");
-    const res = await indexService.queryAttestation("onchain_evm_80001_0x1");
-    console.log("res",res);
+    const res = await indexService.queryAttestationList({
+      schemaId : "onchain_evm_84532_0x1cc",
+      attester:"0xBA2570e298E8111caB760b6614D84879D6957414",
+      mode: "onchain",
+      page: 1,
+    });
+    let count=0;
+    console.log("res",res)
+    for (let i = 0; i < res.rows.length; i++) {
+      console.log("this is ",res.rows[i]);
+    }
+    res.rows.forEach((element) => {
+      if(element.indexingValue === address){
+        count++;
+      }
+    });
+    console.log("count",count);
   }
 
   const handleSendMessage = async () => {

@@ -54,6 +54,7 @@
     "nodemon": "^2.0.22",
     "path": "^0.12.7",
     "paypal-rest-sdk": "^1.8.1",
+    "react-spinners": "^0.14.1",
     "socket.io": "^4.5.4",
     "stripe": "^12.18.0"
   },

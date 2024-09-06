@@ -14,28 +14,28 @@ export const StateContextProvider = ({ children }) => {
     const runPythonFile = async () => {
         try {
             // await callPythonFunction();
-            const response = await axios.get('http://127.0.0.1:5000/run-python')
-            console.log("jindagi acchi");
+            // const response = await axios.get('http://127.0.0.1:5000/run-python')
+            // console.log("jindagi acchi");
 
-            console.log("response",response)
-            console.log("put:",response.ok)
-            console.log("data",typeof(response.data.output))
-            if (!response.data.output) {
-                throw new Error('Failed to fetch Python results. Ensure the backend is running.');
-            }
-            else{
-                console.log("python fetch is successful");
-            }
+            // console.log("response",response)
+            // console.log("put:",response.ok)
+            // console.log("data",typeof(response.data.output))
+            // if (!response.data.output) {
+            //     throw new Error('Failed to fetch Python results. Ensure the backend is running.');
+            // }
+            // else{
+            //     console.log("python fetch is successful");
+            // }
     
-            // console.log("resiult ",result)
-            const result=response
-            if (result.error) {
-                throw new Error(result.error);
-            }
+            // // console.log("resiult ",result)
+            // const result=response
+            // if (result.error) {
+            //     throw new Error(result.error);
+            // }
             
-            setOutput(result.data.output);
-            console.log("future",output)
-            console.log("Python script output:", result.data.output);
+            // setOutput(result.data.output);
+            // console.log("future",output)
+            // console.log("Python script output:", result.data.output);
         } catch (err) {
             console.error('Error running Python code:', err);
             setError('Failed to run Python code. Check the console for more details.');
