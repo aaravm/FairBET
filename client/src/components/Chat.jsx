@@ -3,16 +3,6 @@ import { Button, Container, Row, Col, InputGroup, FormControl } from 'react-boot
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import './Chat.css'; // Assuming custom CSS is being used
 import {useStateContext} from "../context/index"
-<<<<<<< HEAD
-import { useNavigate } from 'react-router-dom';
-const privateKey = "0x2b45672b49ed7422d2cc12239c884fc9e7d4dc023a2f119c8873890c4771a49d"; // Optional
-
-const client = new SignProtocolClient(SpMode.OnChain, {
-  chain: EvmChains.baseSepolia,
-  account: privateKeyToAccount(privateKey), // Optional if you are using an injected provider
-});
-
-=======
 import {
   SignProtocolClient,
   SpMode,
@@ -22,7 +12,7 @@ import {
   delegateSignSchema,
 } from "@ethsign/sp-sdk";
 import { privateKeyToAccount } from "viem/accounts";
->>>>>>> c21b2b0 (sign protocol added)
+import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {
   const [input, setInput] = useState('');
@@ -34,21 +24,11 @@ const Chat = () => {
   const handleChange = (e) => {
     setInput(e.target.value);
   };
-<<<<<<< HEAD
-
-  // Remove user's account when he gets banned
-  useEffect = () => {
-    setAccount('')
-    navigate('../')
-  }
-
-=======
   const client = new SignProtocolClient(SpMode.OnChain, {
     chain: EvmChains.baseSepolia,
     account: privateKeyToAccount(privateKey), // Optional if you are using an injected provider
   });
   
->>>>>>> c21b2b0 (sign protocol added)
   // Load messages from localStorage when the component mounts
   useEffect(() => {
     const savedMessages = JSON.parse(localStorage.getItem('messages'));
