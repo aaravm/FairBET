@@ -19,6 +19,7 @@ const Chat = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const {account, setAccount} = useStateContext();
+  const {ip, setIp} = useStateContext();
   const navigate = useNavigate()
 
   const privateKey = "0x2b45672b49ed7422d2cc12239c884fc9e7d4dc023a2f119c8873890c4771a49d"; // Optional
@@ -59,16 +60,24 @@ const Chat = () => {
       page: 1,
     });
     let count=0;
-    console.log("res",res)
-    for (let i = 0; i < res.rows.length; i++) {
-      console.log("this is ",res.rows[i]);
-    }
+    let count1=0;
+    console.log(ip);
     res.rows.forEach((element) => {
-      if(element.indexingValue === address){
+      console.log("element",element.indexingValue);
+      if(element.indexingValue === address ){
         count++;
+      }
+      if(element.indexingValue === ip){
+        count1++;
       }
     });
     console.log("count",count);
+    if(count>=3 || count1>=3){
+      setAccount('')
+      setIp('')
+      navigate('../')
+      alert("You are banned");
+    }
   }
 
   const handleSendMessage = async () => {
@@ -82,7 +91,7 @@ const Chat = () => {
         const genAI = new GoogleGenerativeAI(Your_API_Key);
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
-        const prompt = `Tell me only in True or False that if I should ban the user if it uses this language: "${data}"`;
+        const prompt = `Tell me only in True or False that if it is a vulgar language: "${data}"`;
 
         const result = await model.generateContent(prompt);
         console.log("result",result)
@@ -91,7 +100,7 @@ const Chat = () => {
         console.log("text",text)
         checkIfUserIsBanned(account);
 
-        if (text.trim() === 'True.') {
+        if (text.trim() === 'True.' || text.trim() === 'True') {
           setMessages([...messages, { text: "WARNING: Don't use any vulgar words, else you'll get banned", sender: 'system' }]);
           alert("WARNING: Don't use any vulgar words, else you'll get banned");
           console.log("create attestation");
@@ -99,6 +108,11 @@ const Chat = () => {
             schemaId: "0x1cc",
             data: { user_address: account },
             indexingValue: account,
+          });
+          const createAttestationReswithIp = await client.createAttestation({
+            schemaId: "0x1cc",
+            data: { user_address: account },
+            indexingValue: ip,
           });
 
         }

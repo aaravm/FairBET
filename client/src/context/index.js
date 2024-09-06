@@ -1,99 +1,84 @@
 import React, { useContext, createContext, useEffect, useState } from 'react';
 import axios from "axios"
+import { IndexService } from "@ethsign/sp-sdk";
 
 const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
     const [account, setAccount] = useState('')
     // const [pyodide, setPyodide] = useState(null);
-    const [output, setOutput] = useState('');
+
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false)
+    const [ip, setIp] = useState('');
 
-    
-    const runPythonFile = async () => {
-        try {
-            // await callPythonFunction();
-            // const response = await axios.get('http://127.0.0.1:5000/run-python')
-            // console.log("jindagi acchi");
+    useEffect(() => {
+      // Fetch the user's IP address
+      const getData = async () => {
+        const res = await axios.get("https://api.ipify.org/?format=json");
+        console.log(res.data);
+        setIp(res.data.ip);
+      };
+      getData();
+    }, []);
 
-            // console.log("response",response)
-            // console.log("put:",response.ok)
-            // console.log("data",typeof(response.data.output))
-            // if (!response.data.output) {
-            //     throw new Error('Failed to fetch Python results. Ensure the backend is running.');
-            // }
-            // else{
-            //     console.log("python fetch is successful");
-            // }
-    
-            // // console.log("resiult ",result)
-            // const result=response
-            // if (result.error) {
-            //     throw new Error(result.error);
-            // }
-            
-            // setOutput(result.data.output);
-            // console.log("future",output)
-            // console.log("Python script output:", result.data.output);
-        } catch (err) {
-            console.error('Error running Python code:', err);
-            setError('Failed to run Python code. Check the console for more details.');
+    const checkIfUserIsBanned = async (address) => {
+        const indexService = new IndexService("testnet");
+        const res = await indexService.queryAttestationList({
+        schemaId : "onchain_evm_84532_0x1cc",
+        attester:"0xBA2570e298E8111caB760b6614D84879D6957414",
+        mode: "onchain",
+        page: 1,
+        });
+        let count=0;
+        let count1=0;
+        console.log(ip);
+        res.rows.forEach((element) => {
+        console.log("element",element.indexingValue);
+        if(element.indexingValue === address ){
+            count++;
         }
-    };
-
+        if(element.indexingValue === ip){
+            count1++;
+        }
+        });
+        console.log("count ",count," count1 ",count1);
+        if(count>=3 || count1>=3){
+        return true
+        }
+        return false
+    }
     const connect = async () => {
         setIsLoading(true)
-        await runPythonFile()
-        setIsLoading(false)
-        // console.log("output:", output)
-        // if(!output)
-        // alert("Fuck off from this website");
-        // else
-        // if (typeof window.ethereum !== "undefined") {
-        //     const { ethereum } = window;
-        //     try {
-        //         await ethereum.request({ method: "eth_requestAccounts" })
-        //     } catch (error) {
-        //         console.log(error)
-        //     }
+        let output=0;
+        output=await checkIfUserIsBanned(account)
+        
+        
+        console.log("output:", output)
+        if(output)
+        alert("You are banned");
+        else
+        if (typeof window.ethereum !== "undefined") {
+            
+            const { ethereum } = window;
+            try {
+                await ethereum.request({ method: "eth_requestAccounts" })
+            } catch (error) {
+                console.log(error)
+            }
 
-        //     const accounts = await ethereum.request({ method: "eth_accounts" })
-        //     console.log(accounts)
-        //     window.location.reload(false);
-        // } else {
-        //     alert("Please install MetaMask");
-        // }
+            const accounts = await ethereum.request({ method: "eth_accounts" })
+            console.log(accounts)
+            window.location.reload(false);
+            await Address();
+        } else {
+            alert("Please install MetaMask");
+        }
+
+        setIsLoading(false)
     }
     
     
-    // useEffect(() => {
-    //     // Function to dynamically load the Pyodide script
-    //     const loadPyodideScript = async () => {
-    //       // Check if Pyodide is already loaded
-    //       if (window.loadPyodide) {
-    //         const pyodideInstance = await window.loadPyodide();
-    //         setPyodide(pyodideInstance);
-    //       } else {
-    //         // Create a new script element
-    //         const script = document.createElement('script');
-    //         script.src = 'https://cdn.jsdelivr.net/pyodide/v0.23.0/full/pyodide.js';
-    //         script.async = true;
-    //         script.onload = async () => {
-    //           // After the script is loaded, initialize Pyodide
-    //           const pyodideInstance = await window.loadPyodide();
-    //           setPyodide(pyodideInstance);
-    //         };
-    //         script.onerror = () => {
-    //           console.error('Failed to load Pyodide script');
-    //         };
-    //         console.log("pyodide is loaded");
-    //         document.body.appendChild(script);
-    //       }
-    //     };
-    
-    //     loadPyodideScript();
-    //   }, []);
   
     const Address = async () => {
         const { ethereum } = window;
@@ -117,39 +102,10 @@ export const StateContextProvider = ({ children }) => {
         }
     }
 
-    useEffect(() => {
-        Address();
-        console.log(account);
-    }, [])
-
-
-    useEffect(() => {
-        console.log("output:", output);
-
-        const handleEthereum = async () => {
-            if(output==='') return;
-            if (!output) {
-                alert("Fuck off from this website");
-            } else {
-                if (typeof window.ethereum !== "undefined") {
-                    const { ethereum } = window;
-                    try {
-                        await ethereum.request({ method: "eth_requestAccounts" });
-                    } catch (error) {
-                        console.log(error);
-                    }
-
-                    const accounts = await ethereum.request({ method: "eth_accounts" });
-                    console.log(accounts);
-                    window.location.reload(false);
-                } else {
-                    alert("Please install MetaMask");
-                }
-            }
-        };
-
-        handleEthereum(); // Call the async function
-    }, [output]);
+    // useEffect(() => {
+    //     Address();
+    //     console.log(account);
+    // }, [])
 
 
 
@@ -160,7 +116,9 @@ export const StateContextProvider = ({ children }) => {
                 setAccount,
                 isLoading,
                 setIsLoading,
-                connect
+                connect,
+                ip,
+                setIp
             }}
         >
             {children}
