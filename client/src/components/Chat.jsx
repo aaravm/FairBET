@@ -4,13 +4,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import './Chat.css'; // Assuming custom CSS is being used
 import {useStateContext} from "../context/index"
 import { useNavigate } from 'react-router-dom';
-const privateKey = "0x2b45672b49ed7422d2cc12239c884fc9e7d4dc023a2f119c8873890c4771a49d"; // Optional
-
-const client = new SignProtocolClient(SpMode.OnChain, {
-  chain: EvmChains.baseSepolia,
-  account: privateKeyToAccount(privateKey), // Optional if you are using an injected provider
-});
-
 import {
   SignProtocolClient,
   SpMode,
