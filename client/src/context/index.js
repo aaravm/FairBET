@@ -8,6 +8,7 @@ export const StateContextProvider = ({ children }) => {
     // const [pyodide, setPyodide] = useState(null);
     const [output, setOutput] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false)
 
     
     const runPythonFile = async () => {
@@ -42,7 +43,9 @@ export const StateContextProvider = ({ children }) => {
     };
 
     const connect = async () => {
+        setIsLoading(true)
         await runPythonFile()
+        setIsLoading(false)
         // console.log("output:", output)
         // if(!output)
         // alert("Fuck off from this website");
@@ -154,6 +157,9 @@ export const StateContextProvider = ({ children }) => {
         <StateContext.Provider
             value={{
                 account,
+                setAccount,
+                isLoading,
+                setIsLoading,
                 connect
             }}
         >

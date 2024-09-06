@@ -1,5 +1,5 @@
 import React from "react";
-import Connect  from "../connect";
+import Connect from "../connect";
 import "./home.css"
 import roulette from "./../../images//roulette-icon.png";
 import blackjack from "./../../images//blackjack-icon.png";
@@ -12,7 +12,7 @@ const Home = () => {
 
 
     const handleRoulette = () => {
-        if(!(account === '')){
+        if (!(account === '')) {
             navigate('/roulette');
         }
     }
@@ -35,11 +35,11 @@ const Home = () => {
             </div>
             <div className="selector">
                 <div className="content" onClick={handleRoulette}>
-                    <img src={roulette} height={300} alt="roullete img"/>
+                    <img src={roulette} height={300} alt="roullete img" />
                     <h1>Roulette</h1>
                 </div>
                 <div className="content" onClick={handleBlackjack}>
-                    <img src={blackjack} height={300} alt="blackjack img"/>
+                    <img src={blackjack} height={300} alt="blackjack img" />
                     <h1>Blackjack</h1>
                 </div>
             </div>
