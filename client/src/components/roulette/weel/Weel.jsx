@@ -2,6 +2,10 @@ import React from 'react';
 import { Button, Image } from 'react-bootstrap';
 import './Weel.css';
 import options from '../options.json';
+import {ethers} from "ethers";
+import tokenABI from "../../../ABI/tokenAbi.json"
+
+const tokenContract = "0x32efFB7E5D75d31D0674c0D3091A415115AF8204";
 
 
 class Weel extends React.Component {
@@ -117,7 +121,16 @@ class Weel extends React.Component {
     return b + c * (tc + -3 * ts + 3 * t);
   }
 
-  handleOnClick() {
+
+  handleOnClick(e) {
+    e.preventDefault();
+    const { ethereum } = window;
+    if (ethereum) {
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(tokenContract, tokenABI, signer);
+      contract.transferTokens(0x56375D354043571d89bfcAeec1Ba0949007c529A, 10)
+    }
     this.spin();
     this.props.isSpinning(true)
   }

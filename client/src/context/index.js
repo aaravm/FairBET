@@ -1,6 +1,8 @@
 import React, { useContext, createContext, useEffect, useState } from 'react';
 import axios from "axios"
 import { IndexService } from "@ethsign/sp-sdk";
+import tokenABI from "../ABI/tokenAbi.json"
+import { ethers } from "ethers"
 
 const StateContext = createContext();
 
@@ -49,17 +51,7 @@ export const StateContextProvider = ({ children }) => {
         return false
     }
     const connect = async () => {
-        setIsLoading(true)
-        let output=0;
-        output=await checkIfUserIsBanned(account)
-        
-        
-        console.log("output:", output)
-        if(output)
-        alert("You are banned");
-        else
         if (typeof window.ethereum !== "undefined") {
-            
             const { ethereum } = window;
             try {
                 await ethereum.request({ method: "eth_requestAccounts" })
@@ -70,16 +62,41 @@ export const StateContextProvider = ({ children }) => {
             const accounts = await ethereum.request({ method: "eth_accounts" })
             console.log(accounts)
             window.location.reload(false);
-            await Address();
         } else {
             alert("Please install MetaMask");
         }
-
-        setIsLoading(false)
     }
     
     
-  
+    // useEffect(() => {
+    //     // Function to dynamically load the Pyodide script
+    //     const loadPyodideScript = async () => {
+    //       // Check if Pyodide is already loaded
+    //       if (window.loadPyodide) {
+    //         const pyodideInstance = await window.loadPyodide();
+    //         setPyodide(pyodideInstance);
+    //       } else {
+    //         // Create a new script element
+    //         const script = document.createElement('script');
+    //         script.src = 'https://cdn.jsdelivr.net/pyodide/v0.23.0/full/pyodide.js';
+    //         script.async = true;
+    //         script.onload = async () => {
+    //           // After the script is loaded, initialize Pyodide
+    //           const pyodideInstance = await window.loadPyodide();
+    //           setPyodide(pyodideInstance);
+    //         };
+    //         script.onerror = () => {
+    //           console.error('Failed to load Pyodide script');
+    //         };
+    //         console.log("pyodide is loaded");
+    //         document.body.appendChild(script);
+    //       }
+    //     };
+    
+    //     loadPyodideScript();
+    //   }, []);
+    const tokenContract = "0x32efFB7E5D75d31D0674c0D3091A415115AF8204"
+
     const Address = async () => {
         const { ethereum } = window;
         if (!ethereum) {
@@ -96,16 +113,52 @@ export const StateContextProvider = ({ children }) => {
         if (accounts.length !== 0) {
             setAccount(accounts[0]);
             console.log("Found an authorized account:", accounts);
+            const { ethereum } = window;
+            if (ethereum) {
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract(tokenContract, tokenABI, signer);
+                contract.fundUser();
+            }
 
         } else {
             console.log("No authorized account found");
         }
     }
 
+    useEffect(() => {
+        Address();
+        console.log(account);
+    }, [])
+
+
     // useEffect(() => {
-    //     Address();
-    //     console.log(account);
-    // }, [])
+    //     console.log("output:", output);
+
+    //     const handleEthereum = async () => {
+    //         if(output==='') return;
+    //         if (!output) {
+    //             alert("Fuck off from this website");
+    //         } else {
+    //             if (typeof window.ethereum !== "undefined") {
+    //                 const { ethereum } = window;
+    //                 try {
+    //                     await ethereum.request({ method: "eth_requestAccounts" });
+    //                 } catch (error) {
+    //                     console.log(error);
+    //                 }
+
+    //                 const accounts = await ethereum.request({ method: "eth_accounts" });
+    //                 console.log(accounts);
+    //                 window.location.reload(false);
+    //             } else {
+    //                 alert("Please install MetaMask");
+    //             }
+    //         }
+    //     };
+
+    //     handleEthereum(); // Call the async function
+    // }, [output]);
 
 
 
