@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ethsign/sp-sdk": "^0.7.3",
     "@google/generative-ai": "^0.17.1",
     "@react-oauth/google": "^0.12.1",
     "@testing-library/jest-dom": "^4.2.4",

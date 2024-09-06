@@ -37,6 +37,7 @@
   },
   "homepage": "https://github.com/oanapopescu93/casino#readme",
   "dependencies": {
+    "@ethsign/sp-sdk": "^0.7.3",
     "axios": "^1.3.6",
     "bitcoinjs-lib": "^6.1.3",
     "bitcore-explorers": "^1.0.1",
