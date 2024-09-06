@@ -100,7 +100,7 @@ class Weel extends React.Component {
     }
   }
 
-  stopRotateWheel() {
+  async stopRotateWheel() {
     let { startAngle, arc } = this.state;
     const canvas = this.refs.canvas;
     const ctx = canvas.getContext('2d');
@@ -109,7 +109,11 @@ class Weel extends React.Component {
     const index = Math.floor((360 - degrees % 360) / arcd);
     ctx.save();
     const text = options[index].number;
-    this.setState({ text })
+    const tx = text;
+    this.setState({ text });
+    this.props.setLoading(true);
+    await this.props.setTarget(tx);
+    this.props.setLoading(false);
     ctx.restore();
     this.props.updateNum(this.state.text);
   }
@@ -146,7 +150,8 @@ class Weel extends React.Component {
   }
 
   renderNumber = () => {
-    this.props.setTarget(this.state.text);
+    // this.props.setTarget(this.state.text);
+    // this.props.getResult();
     
     return (
       <h1 className="blinky-number display-4 pt-1 m-0">{this.state.text}</h1>

@@ -21,6 +21,25 @@ import ResultAlert from '../components/blackjack/ResultAlert';
 import Chat from '../components/Chat';
 
 class Roulette extends React.Component {
+
+  state = {
+    num: "", //winning number
+    arr: [], //array of bets
+    count: 0, //spins count
+    wins: 0, //wins count
+    chip: 10, //chip value
+    coins: 100000, //coins count
+    losses: 0, //losses count
+    spinning: false, //the wheel is spinning?
+    message: "Put your bets and spin the wheel!", //message
+    extArr: [], //little trick: pushing number here if user win, so if it's empty, user loose
+    //my JSON rows
+    firstRow, firstBorder, secondRow, secondBorder, thirdRow, thirdBorder, fourthRow, fifthRow, columnLeft, columnRight,
+
+    result: '',
+    loading: false,
+  }
+
   async setGuess(){
     const response = await fetch('http://127.0.0.1:5000/set-secret-guess', {
       method: 'POST',
@@ -42,25 +61,32 @@ class Roulette extends React.Component {
       body: JSON.stringify({ target: num }),
     });
     const body = await response.text();
+    await this.getResult();
     console.log(body);
   }
 
-  state = {
-    num: "", //winning number
-    arr: [], //array of bets
-    count: 0, //spins count
-    wins: 0, //wins count
-    chip: 10, //chip value
-    coins: 100000, //coins count
-    losses: 0, //losses count
-    spinning: false, //the wheel is spinning?
-    message: "Put your bets and spin the wheel!", //message
-    extArr: [], //little trick: pushing number here if user win, so if it's empty, user loose
-    //my JSON rows
-    firstRow, firstBorder, secondRow, secondBorder, thirdRow, thirdBorder, fourthRow, fifthRow, columnLeft, columnRight,
 
-    result: ''
+  getResult = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/get-result', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const body = await response.json(); // Assuming the response is JSON
+      this.state.result = body.output; // Use setState to update the state
+      this.setState({ result: this.state.result })
+      console.log(this.state.result);
+    } catch (error) {
+      console.error('Error fetching result:', error);
+    }
   }
+  
+  setLoading = (s) => {
+    console.log(s);
+    this.setState({ loading: s });
+}
 
   //declaring here all the combinations, easier this way
   twoByOneFirst = ["3", "6", "2", "12", "15", "18", "21", "24", "27", "30", "33", "36"];
@@ -269,7 +295,9 @@ class Roulette extends React.Component {
         <Row className="justify-items-center pt-2">
           <Logo />
           <ResultAlert
+            Loading={this.state.loading}
             Result={this.state.result}
+            setResult={(r) => this.setState({result : r})} // Pass a method to clear the result state
           />
           <Container fluid className="table">
             <Row>
@@ -324,6 +352,8 @@ class Roulette extends React.Component {
                   isSpinning={this.isSpinning}
                   updateNum={this.updateNum}
                   setTarget={this.setTarget}
+                  getResult={this.getResult}
+                  setLoading={this.setLoading}
                   num={this.state.num}
                   arr={this.state.arr}
                   count={this.state.count}
