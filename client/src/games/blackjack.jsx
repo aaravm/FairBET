@@ -6,6 +6,7 @@ import Money from "./../components/blackjack/Money.jsx";
 import Logo from "./../components/blackjack/Logo.jsx";
 import ResultAlert from "./../components/blackjack/ResultAlert.jsx";
 import BlockCarts from "./../components/blackjack/BlockCarts.jsx";
+import Chat from '../components/Chat';
 
 
 function BlackJack() {
@@ -255,7 +256,7 @@ function BlackJack() {
                 Colors={colors}
                 BotStop={botStop}
             />
-
+          <Chat/>
         </div>
     );
 }

@@ -14,10 +14,12 @@ import {
   delegateSignSchema,
 } from "@ethsign/sp-sdk";
 import { privateKeyToAccount } from "viem/accounts";
+import { FaComments } from 'react-icons/fa'; // Add your preferred icon library
 
 const Chat = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
+  const [isChatVisible, setIsChatVisible] = useState(false); // Manage chat visibility
   const {account, setAccount} = useStateContext();
   const {ip, setIp} = useStateContext();
   const navigate = useNavigate()
@@ -130,35 +132,44 @@ const Chat = () => {
     }
   };
 
+  const toggleChat = () => {
+    setIsChatVisible(!isChatVisible);
+  };
+
   return (
-    <Container className="chat-container">
-      <Row>
-        <Col xs={12} md={8} className="mx-auto">
-          <div className="chat-box">
-            <div className="messages-box">
-              {messages.length === 0 && <div className="message system-message">Start chatting with the AI</div>}
-              {!(messages.length === 0) && messages.map((message, index) => (
-                <div key={index} className={`message ${message.sender === 'user' ? 'user-message' : 'system-message'}`}>
-                  {message.text}
-                </div>
-              ))}
+    <>
+      <Container className={`chat-container ${isChatVisible ? 'chat-visible' : 'chat-hidden'}`}>
+        <Row>
+          <Col xs={12} md={8} className="mx-auto">
+            <div className="chat-box">
+              <div className="messages-box">
+                {messages.length === 0 && <div className="message system-message">Start chatting with the AI</div>}
+                {!(messages.length === 0) && messages.map((message, index) => (
+                  <div key={index} className={`message ${message.sender === 'user' ? 'user-message' : 'system-message'}`}>
+                    {message.text}
+                  </div>
+                ))}
+              </div>
+              <InputGroup className="mb-3 chat-input-group">
+                <FormControl
+                  placeholder="Type a message..."
+                  value={input}
+                  onChange={handleChange}
+                  onKeyDown={handleKeyPress}  // Capture the Enter key press here
+                  className="chat-input"
+                />
+                <Button variant="primary" onClick={handleSendMessage} className="send-button">
+                  Send
+                </Button>
+              </InputGroup>
             </div>
-            <InputGroup className="mb-3 chat-input-group">
-              <FormControl
-                placeholder="Type a message..."
-                value={input}
-                onChange={handleChange}
-                onKeyDown={handleKeyPress}  // Capture the Enter key press here
-                className="chat-input"
-              />
-              <Button variant="primary" onClick={handleSendMessage} className="send-button">
-                Send
-              </Button>
-            </InputGroup>
-          </div>
-        </Col>
-      </Row>
-    </Container>
+          </Col>
+        </Row>
+      </Container>
+      <Button className="chat-toggle-button" onClick={toggleChat}>
+        <FaComments />
+      </Button>
+    </>
   );
 };
 

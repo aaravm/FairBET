@@ -17,7 +17,7 @@ import fifthRow from '../components/roulette/table/rows/FifthRow.json';
 import columnLeft from '../components/roulette/table/rows/ColumnLeft.json';
 import columnRight from '../components/roulette/table/rows/ColumnRight.json';
 import Logo from '../components/roulette/Logo';
-import ResultAlert from '../components/blackjack/ResultAlert';
+import ResultAlert from '../components/roulette/ResultAlert';
 import Chat from '../components/Chat';
 
 class Roulette extends React.Component {
