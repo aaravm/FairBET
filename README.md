@@ -1,8 +1,8 @@
 # FairBET: A Casino Game Prioritizing User Trust and Data Privacy
 A decentralized roulette platform focused on ensuring fair play, privacy, and trust using Nillion and Sign protocol. 
 There are 2 parts to this projects:
-1. Securely play roulette and other casino games, with all computations happening securely and privately on Nillion
-2. Securely storing the hash of hardware ID of a user, so that banned user can't play from the same device
+1. Securely play roulette and other casino games, with all computations happening securely and privately on Nillion.
+2. Securely storing the hash of hardware ID of a user, so that banned user can't play from the same device.
 
 ## Usage:
 On information on how to use this repository locally, check [docs](./docs/usage.md)
@@ -24,9 +24,13 @@ In FairBET’s roulette, we’ve utilized Nillion to safeguard the user’s bett
 Once the roulette wheel is spun, and it generates a result, it is sent to the Nillion server, which privately computes whether the user won or lost.
 The result is returned securely, without exposing any sensitive data. This ensures that neither the game makers nor external actors can influence the outcome, promoting fairness and transparency.
 - <b> Blackjack:</b> In FairBET’s blackjack, we address the common concern that the deck may be manipulated or that cards could be unfairly swapped. We store the state of the card deck on Nillion. After every move, the platform verifies whether there has been any tampering with the deck.
-Additionally, Sign Protocol ensures that a user’s cards remain unchanged during gameplay. After each move, an attestation is generated, linking the current card sequence to the previous one. This cryptographic validation prevents any malicious activity from altering the cards, maintaining fairness throughout the game.
+Additionally, Sign Protocol ensures that a user’s cards remain unchanged during gameplay. It can be the case that there is a hacker and he malaciously changes the cards he has. But this is prevented with Sign, thus maintaining fairnesss.
 - <b> Security Features Beyond the Games: </b> To further enhance platform security, we’ve implemented a ban functionality for user misconduct in the chatroom. If a user misbehaves, they receive up to three warnings. After that, the system generates an attestation using Sign Protocol and permanently bans the user, preventing further logins.
 
 ## How is it made?
-We are basically using Nillion and Sign Protocol to ensure privacy.
-- <b> Wallet connection: </b>
+FairBET is made with ReactJS for frontend and Python for backend using Nillion.
+- <b> Nillion Integration: </b> 
+- <b> Sign Protocol Integration: </b> We have used sign to create two schemas. In the blackjack game mentioned above, an attestation is generated after each move, linking it to the previous attestation. With a help of custom schema hook, we check if there is any user's card state change. If so, we revert the attestation and detect a hack, else we create the attestation. This cryptographic validation prevents any malicious activity from altering the cards, maintaining fairness throughout the game. In another schema, We create attestations of banned users, and if a user connect his wallet, we check if there is an attestation already created with that account, if not we let the user log in.
+- <b> Contracts: </b>
+  - fairbetToken.sol : A custom ERC20 token created for users to play.
+  - WhitelistManager.sol: This custom schema hook contract matches the current and previous attestation state and allows only game managers to create attestations.
