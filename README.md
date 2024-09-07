@@ -29,7 +29,8 @@ Additionally, Sign Protocol ensures that a user’s cards remain unchanged durin
 
 ## How is it made?
 FairBET is made with ReactJS for frontend and Python for backend using Nillion.
-- <b> Nillion Integration: </b> 
+- <b> Nillion Integration: </b> We have used nillion's blind computation protocol to store the user's bet details and the array of possible winning combinations (dependent on the number on which the ball is going to land in the roulette). Then the nada_secret program processes these variables and the result of the spin is returned. This removes a major vulnerability, as the bets of the users are handled secretly and blindly in the nillion-devnet. <br> Apart from this blind computation, we have also added a feature of hardware banning. In this we extract the player's respective ip address and wallet address, and send it to the nillion-devnet for generating a unified harware ban identifier, and then store it. This way, no sensive personal information about the players is revealed, as after the secure computation, only the hash is retured back, which is publicly visible.
+
 - <b> Sign Protocol Integration: </b> We have used sign to create two schemas. In the blackjack game mentioned above, an attestation is generated after each move, linking it to the previous attestation. With a help of custom schema hook, we check if there is any user's card state change. If so, we revert the attestation and detect a hack, else we create the attestation. This cryptographic validation prevents any malicious activity from altering the cards, maintaining fairness throughout the game. In another schema, We create attestations of banned users, and if a user connect his wallet, we check if there is an attestation already created with that account, if not we let the user log in.
 - <b> Contracts: </b>
   - fairbetToken.sol : A custom ERC20 token created for users to play.
