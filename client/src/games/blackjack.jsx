@@ -10,10 +10,7 @@ import Chat from '../components/Chat';
 import Back from "../components/back.jsx";
 import { ethers } from "ethers";
 import tokenABI from "../ABI/tokenAbi.json"
-
-const tokenContract = "0xFe7D1646B93cEb71347C823CaA04Ada19EC5DFA9";
-import { useStateContext } from "../context/index";
-// import Back from "../components/back.jsx";
+import { useStateContext } from "../context/index.js";
 import {
     SignProtocolClient,
     SpMode,
@@ -22,8 +19,10 @@ import {
     delegateSignAttestation,
     delegateSignRevokeAttestation,
     delegateSignSchema,
-  } from "@ethsign/sp-sdk";
+} from "@ethsign/sp-sdk";
 import { privateKeyToAccount } from "viem/accounts";
+
+const tokenContract = "0xFe7D1646B93cEb71347C823CaA04Ada19EC5DFA9";
 
 function BlackJack() {
     const [result, setResult] = useState('')                // Результат исходя из хода игры

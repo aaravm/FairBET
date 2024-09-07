@@ -55,6 +55,7 @@ const Chat = () => {
 
   const checkIfUserIsBanned = async (address) => {
     const indexService = new IndexService("testnet");
+    console.log(process.env.CHAIN_SCHEMA_ID)
     const res = await indexService.queryAttestationList({
       schemaId : "onchain_evm_84532_0x248",
       attester:"0xfC986a6A04D2Bd4bF87123e5d1F3bc91B84e5515",

@@ -28,7 +28,7 @@ export const StateContextProvider = ({ children }) => {
     const checkIfUserIsBanned = async (address) => {
         const indexService = new IndexService("testnet");
         const res = await indexService.queryAttestationList({
-        schemaId : "onchain_evm_84532_0x22f",
+        schemaId: "onchain_evm_84532_0x248",
         attester:"0xBA2570e298E8111caB760b6614D84879D6957414",
         mode: "onchain",
         page: 1,
