@@ -5,7 +5,7 @@ import options from '../options.json';
 import {ethers} from "ethers";
 import tokenABI from "../../../ABI/tokenAbi.json"
 
-const tokenContract = "0x32efFB7E5D75d31D0674c0D3091A415115AF8204";
+const tokenContract = "0x7055954033A08De3b8Db8242F0d6383B21e31963";
 
 
 class Weel extends React.Component {
@@ -126,14 +126,20 @@ class Weel extends React.Component {
   }
 
 
-  handleOnClick(e) {
+  async handleOnClick(e) {
     e.preventDefault();
     const { ethereum } = window;
     if (ethereum) {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(tokenContract, tokenABI, signer);
-      contract.transferTokens(0x56375D354043571d89bfcAeec1Ba0949007c529A, 10)
+      // try{
+        await contract.transferTokens('0x56375D354043571d89bfcAeec1Ba0949007c529A', 10)
+      // }
+      // catch(error){
+      //   alert("Transaction failed, Pls check your balance")
+      //   return
+      // }
     }
     this.spin();
     this.props.isSpinning(true)
