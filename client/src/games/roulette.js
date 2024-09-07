@@ -19,7 +19,9 @@ import columnRight from '../components/roulette/table/rows/ColumnRight.json';
 import Logo from '../components/roulette/Logo';
 import ResultAlert from '../components/roulette/ResultAlert';
 import Chat from '../components/Chat';
-import Back from '../components/back';
+import { ethers } from 'ethers';
+import tokenABI from "../ABI/tokenAbi.json"
+import { useStateContext } from '../context';
 
 class Roulette extends React.Component {
 
@@ -29,7 +31,7 @@ class Roulette extends React.Component {
     count: 0, //spins count
     wins: 0, //wins count
     chip: 10, //chip value
-    coins: 100000, //coins count
+    coins: 500, //coins count
     losses: 0, //losses count
     spinning: false, //the wheel is spinning?
     message: "Put your bets and spin the wheel!", //message
@@ -67,6 +69,7 @@ class Roulette extends React.Component {
   }
 
 
+
   getResult = async () => {
     try {
       const response = await fetch('http://127.0.0.1:5000/get-result', {
@@ -79,6 +82,22 @@ class Roulette extends React.Component {
       this.state.result = body.output; // Use setState to update the state
       this.setState({ result: this.state.result })
       console.log(this.state.result);
+      if(this.state.result === 'True'){
+        const tokenContract = "0xFe7D1646B93cEb71347C823CaA04Ada19EC5DFA9";
+        const { ethereum } = window;
+        if (ethereum) {
+          const provider = new ethers.providers.Web3Provider(ethereum);
+          const signer = provider.getSigner();
+          const contract = new ethers.Contract(tokenContract, tokenABI, signer);
+          try {
+            await contract.victorySend(20)
+          }
+          catch (error) {
+            alert("Transaction failed, Pls check your balance")
+            return
+          }
+        }
+      }
     } catch (error) {
       console.error('Error fetching result:', error);
     }

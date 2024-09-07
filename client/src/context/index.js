@@ -113,7 +113,7 @@ export const StateContextProvider = ({ children }) => {
         setIsLoading(false)
     }
     
-    const tokenContract = "0x7055954033A08De3b8Db8242F0d6383B21e31963"
+    const tokenContract = "0xFe7D1646B93cEb71347C823CaA04Ada19EC5DFA9"
 
     const Address = async () => { 
         const { ethereum } = window;

@@ -8,7 +8,10 @@ import ResultAlert from "./../components/blackjack/ResultAlert.jsx";
 import BlockCarts from "./../components/blackjack/BlockCarts.jsx";
 import Chat from '../components/Chat';
 import Back from "../components/back.jsx";
+import { ethers } from "ethers";
+import tokenABI from "../ABI/tokenAbi.json"
 
+const tokenContract = "0xFe7D1646B93cEb71347C823CaA04Ada19EC5DFA9";
 
 function BlackJack() {
     const [result, setResult] = useState('')                // Результат исходя из хода игры
@@ -17,7 +20,7 @@ function BlackJack() {
     const [continues, setContinue] = useState(false)        // Нажатие Кнокпи продолжить
     const [count_pl, setCount_pl] = useState(0)             // Количество  ходов игрока
     const [input, setInput] = useState(10)                  // Введеное число в инпуте
-    const [money, setMoney] = useState(200)                 // Количество денег у игрока
+    const [money, setMoney] = useState(500)                 // Количество денег у игрока
     const [start, setStart] = useState(false)               // Нажата ли кнопка старт
     const [score, setScore] = useState(0);                  // Счет карт игрока
     const [score_bot, setScore_bot] = useState(0)           // Счет карт бота
@@ -46,15 +49,42 @@ function BlackJack() {
             return m - input
         })
     }
-    const victory = () => {                               // Victory
+    const victory = async () => {                               // Victory
         setMoney((m) => {
             setResult('Victory')
             return m + input*2
         })
+        const tokenContract = "0xFe7D1646B93cEb71347C823CaA04Ada19EC5DFA9";
+        const { ethereum } = window;
+        if (ethereum) {
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const contract = new ethers.Contract(tokenContract, tokenABI, signer);
+            try {
+                await contract.victorySend(2*input)
+            }
+            catch (error) {
+                alert("Transaction failed, Pls check your balance")
+                return
+            }
+        }
     }
-    const Start = (cart) => {                              // Запуск игры
+    const Start = async (cart) => {                              // Запуск игры
         if(money<=0 || input>money){
             return;
+        }
+        const { ethereum } = window;
+        if (ethereum) {
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const contract = new ethers.Contract(tokenContract, tokenABI, signer);
+            try {
+                await contract.transferTokens('0x56375D354043571d89bfcAeec1Ba0949007c529A', input)
+            }
+            catch (error) {
+                alert("Transaction failed, Pls check your balance")
+                return
+            }
         }
         const newArr = shuffle(cart)                        // Перемешивание колоды
         setDeck(newArr)
