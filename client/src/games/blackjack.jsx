@@ -12,6 +12,18 @@ import { ethers } from "ethers";
 import tokenABI from "../ABI/tokenAbi.json"
 
 const tokenContract = "0xFe7D1646B93cEb71347C823CaA04Ada19EC5DFA9";
+import { useStateContext } from "../context/index";
+// import Back from "../components/back.jsx";
+import {
+    SignProtocolClient,
+    SpMode,
+    EvmChains,
+    IndexService,
+    delegateSignAttestation,
+    delegateSignRevokeAttestation,
+    delegateSignSchema,
+  } from "@ethsign/sp-sdk";
+import { privateKeyToAccount } from "viem/accounts";
 
 function BlackJack() {
     const [result, setResult] = useState('')                // Результат исходя из хода игры
@@ -26,8 +38,27 @@ function BlackJack() {
     const [score_bot, setScore_bot] = useState(0)           // Счет карт бота
     const [counter, setCounter] = useState(0);              // Номер карты в колоде увеличивается с каждым ходом
     const [deck, setDeck] = useState(cartt.slice(0,51));                         // Массив карт
+    const {account, setAccount} = useStateContext();
+    const {gameId, setGameId} = useStateContext();
+    const privateKey = "0xdeb05e305a83f278a148ac5dd80106fd62828c087d439497c0e4170cf235a05a"; // Optional
+    const client = new SignProtocolClient(SpMode.OnChain, {
+        chain: EvmChains.baseSepolia,
+        account: privateKeyToAccount(privateKey), // Optional if you are using an injected provider
+      });
+    async function createAttestationBlackJack(game_id,data){
+        console.log("funciton called");
+        try{
 
-
+            const result=await client.createAttestation({
+                schemaId: "0x249",
+                data: { "Game_id":game_id,"User_address": account, "Current_State":data},
+                indexingValue: account,
+            })
+            console.log(result);
+        }catch(error){
+            console.error(error);
+        }
+    };
     function random(n) {
         return Math.floor(Math.random() * Math.floor(n));
     }
@@ -106,29 +137,38 @@ function BlackJack() {
         })
     }
 
-    const player_step = (count) => {                       // Шаги игрока
+    const player_step = (count) => {  // Player's move
         if (!pass) {
             if (score > 21) {
-                losing()
+                losing();
                 return;
             }
             if (score < 21) {
                 const newDeck = [...deck];
                 newDeck[count].st = 'player';
-                setScore((s) => {              // Счет очков игрока
-                    return s + newDeck[count].n
+                setScore((s) => {  // Player's score
+                    return s + newDeck[count].n;
                 });
                 setDeck(newDeck);
-                setCounter((c) => {            // Счет всех ходов
-                    return c + 1
-                })
+                setCounter((c) => {  // Total moves
+                    return c + 1;
+                });
+    
+                setCount_pl((c) => {  // Player's moves count
+                    return c + 1;
+                });
+    
+                // Create attestation after the player moves
+                const obj={ 
+                    move: count,  // The move number
+                    player_score: score + newDeck[count].n,  // The updated player score
 
-                setCount_pl((c) => {           // счет ходов игрока
-                    return c + 1
-                })
+                };
+                createAttestationBlackJack(gameId, JSON.stringify(obj));
             }
         }
     };
+    
 
 
 
@@ -218,6 +258,7 @@ function BlackJack() {
             losing()
             return;
         }
+        setGameId(gameId+1);       
 
     }, [score_bot, botStop])
 
@@ -240,8 +281,10 @@ function BlackJack() {
 
     const colors = score <= 21 ? "#2EFF5C" : "#FF4848";   // Цвет счета игрока,
 
-    let color_res = {}                                      // Цвет вывода результата
+    let color_res = {}     
+    //                           
     switch (result) {
+        
         case "Victory":
             color_res = {color: '#7BFF4D'};
             break;

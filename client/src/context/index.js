@@ -13,6 +13,7 @@ export const StateContextProvider = ({ children }) => {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false)
     const [ip, setIp] = useState('');
+    const [gameId, setGameId] = useState(0);
 
     useEffect(() => {
       // Fetch the user's IP address
@@ -27,7 +28,7 @@ export const StateContextProvider = ({ children }) => {
     const checkIfUserIsBanned = async (address) => {
         const indexService = new IndexService("testnet");
         const res = await indexService.queryAttestationList({
-        schemaId : "onchain_evm_84532_0x1cc",
+        schemaId : "onchain_evm_84532_0x22f",
         attester:"0xBA2570e298E8111caB760b6614D84879D6957414",
         mode: "onchain",
         page: 1,
@@ -36,8 +37,6 @@ export const StateContextProvider = ({ children }) => {
         let count1=0;
         console.log(ip);
         res.rows.forEach((element) => {
-        console.log("element",element.indexingValue);
-        console.log("address",address);
         if(element.indexingValue === address ){
             count++;
         }
@@ -45,8 +44,7 @@ export const StateContextProvider = ({ children }) => {
             count1++;
         }
         });
-        console.log("count ",count," count1 ",count1);
-        if(count>=30 || count1>=30){
+        if(count>=3 || count1>=3){
         return true
         }
         return false
@@ -166,7 +164,9 @@ export const StateContextProvider = ({ children }) => {
                 setIsLoading,
                 connect,
                 ip,
-                setIp
+                setIp,
+                gameId,
+                setGameId,
             }}
         >
             {children}

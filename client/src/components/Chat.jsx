@@ -24,7 +24,7 @@ const Chat = () => {
   const {ip, setIp} = useStateContext();
   const navigate = useNavigate()
 
-  const privateKey = "0x2b45672b49ed7422d2cc12239c884fc9e7d4dc023a2f119c8873890c4771a49d"; // Optional
+  const privateKey = "0xdeb05e305a83f278a148ac5dd80106fd62828c087d439497c0e4170cf235a05a"; // Optional
   const handleChange = (e) => {
     setInput(e.target.value);
   };
@@ -56,16 +56,14 @@ const Chat = () => {
   const checkIfUserIsBanned = async (address) => {
     const indexService = new IndexService("testnet");
     const res = await indexService.queryAttestationList({
-      schemaId : "onchain_evm_84532_0x1cc",
-      attester:"0xBA2570e298E8111caB760b6614D84879D6957414",
+      schemaId : "onchain_evm_84532_0x248",
+      attester:"0xfC986a6A04D2Bd4bF87123e5d1F3bc91B84e5515",
       mode: "onchain",
       page: 1,
     });
     let count=0;
     let count1=0;
-    console.log(ip);
     res.rows.forEach((element) => {
-      console.log("element",element.indexingValue);
       if(element.indexingValue === address ){
         count++;
       }
@@ -107,15 +105,16 @@ const Chat = () => {
           alert("WARNING: Don't use any vulgar words, else you'll get banned");
           console.log("create attestation");
           const createAttestationRes = await client.createAttestation({
-            schemaId: "0x1cc",
+            schemaId: "0x248",
             data: { user_address: account },
             indexingValue: account,
           });
           const createAttestationReswithIp = await client.createAttestation({
-            schemaId: "0x1cc",
+            schemaId: "0x248",
             data: { user_address: account },
             indexingValue: ip,
           });
+          console.log(createAttestationRes);
 
         }
       } catch (error) {
