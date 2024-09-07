@@ -19,6 +19,7 @@ import columnRight from '../components/roulette/table/rows/ColumnRight.json';
 import Logo from '../components/roulette/Logo';
 import ResultAlert from '../components/roulette/ResultAlert';
 import Chat from '../components/Chat';
+import Back from '../components/back';
 
 class Roulette extends React.Component {
 
@@ -292,6 +293,7 @@ class Roulette extends React.Component {
   render() {
     return (
       <Container>
+        <Back />
         <Row className="justify-items-center pt-2">
           <Logo />
           <ResultAlert

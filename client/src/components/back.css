@@ -1,0 +1,23 @@
+/* ButtonComponent.css */
+.top-left-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 100%;
+    cursor: pointer;
+  }
+  
+  .top-left-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .top-left-button svg {
+    margin-right: 8px; /* Space between icon and text */
+  }
+  

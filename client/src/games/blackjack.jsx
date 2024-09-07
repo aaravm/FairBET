@@ -7,6 +7,7 @@ import Logo from "./../components/blackjack/Logo.jsx";
 import ResultAlert from "./../components/blackjack/ResultAlert.jsx";
 import BlockCarts from "./../components/blackjack/BlockCarts.jsx";
 import Chat from '../components/Chat';
+import Back from "../components/back.jsx";
 
 
 function BlackJack() {
@@ -224,6 +225,7 @@ function BlackJack() {
 
     return (
         <div style={color_res} className="game-box">
+            <Back />
             <ResultAlert
                 BotStop={botStop}
                 Money={money}
