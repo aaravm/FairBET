@@ -20,15 +20,13 @@ To address these concerns, we introduce FairBET, a casino platform built with Ni
 Roulette Game
 In FairBET’s roulette, we’ve utilized Nillion to safeguard the user’s betting information. Here’s how it works:
 
- - A user’s bet remains completely private, stored on Nillion’s decentralized network, inaccessible to anyone—including game administrators.
-Once the roulette wheel generates a result, it is sent to Nillion, which privately computes whether the user won or lost.
+- <b>Roulette:</b> A user’s bet remains completely private, stored on Nillion’s decentralized network, making it inaccessible to anyone—including game administrators.
+Once the roulette wheel is spun, and it generates a result, it is sent to the Nillion server, which privately computes whether the user won or lost.
 The result is returned securely, without exposing any sensitive data. This ensures that neither the game makers nor external actors can influence the outcome, promoting fairness and transparency.
-Blackjack Game
-In FairBET’s blackjack, we address the common concern that the deck may be manipulated or that cards could be unfairly swapped:
-
- - We store the state of the card deck on Nillion. After every move, the platform verifies whether there has been any tampering with the deck.
+- <b> Blackjack:</b> In FairBET’s blackjack, we address the common concern that the deck may be manipulated or that cards could be unfairly swapped. We store the state of the card deck on Nillion. After every move, the platform verifies whether there has been any tampering with the deck.
 Additionally, Sign Protocol ensures that a user’s cards remain unchanged during gameplay. After each move, an attestation is generated, linking the current card sequence to the previous one. This cryptographic validation prevents any malicious activity from altering the cards, maintaining fairness throughout the game.
-Security Features Beyond the Games
+- <b> Security Features Beyond the Games: </b> To further enhance platform security, we’ve implemented a ban functionality for user misconduct in the chatroom. If a user misbehaves, they receive up to three warnings. After that, the system generates an attestation using Sign Protocol and permanently bans the user, preventing further logins.
 
-- To further enhance platform security, we’ve implemented a ban functionality for user misconduct in the chatroom. If a user misbehaves, they receive up to three warnings. After that:<br>
-The system generates an attestation using Sign Protocol and permanently bans the user, preventing further logins.
+## How is it made?
+We are basically using Nillion and Sign Protocol to ensure privacy.
+- <b> Wallet connection: </b>
