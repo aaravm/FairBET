@@ -46,7 +46,7 @@ export const StateContextProvider = ({ children }) => {
         }
         });
         console.log("count ",count," count1 ",count1);
-        if(count>=3 || count1>=3){
+        if(count>=30 || count1>=30){
         return true
         }
         return false
@@ -83,7 +83,7 @@ export const StateContextProvider = ({ children }) => {
                         const signer = provider.getSigner();
                         const contract = new ethers.Contract(tokenContract, tokenABI, signer);
                         try{
-                            const result = contract.fundUser();
+                            const result =await contract.fundUser();
                             console.log("result:::", result);
                         }
                         catch(e){
