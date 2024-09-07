@@ -4,6 +4,8 @@ There are 2 parts to this projects:
 1. Securely play roulette and other casino games, with all computations happening securely and privately on Nillion. Also attesting each move in Blackjack by using Sign Protocol, and our custom schema hooks help us attest each move by knowing current and previous move of the user.
 2. When the user logs in our application, we query data from our schema to check whether the user is banned from our application or not. Also, we take care that malicious users cannot access the user's IP address and wallet address, by using nillion to securely compute the hash of users' details, and returning only the hash.
 
+### Video Demo
+https://www.loom.com/share/b0a00088d47e43a0b201541f08c017ce?sid=2dfcbccd-b5ec-4b94-8e0f-e68a0cef10d4
 
 ## Usage:
 On information on how to use this repository locally, check [docs](./docs/usage.md)
