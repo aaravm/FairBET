@@ -12,7 +12,7 @@ The online casino industry has grown significantly, attracting millions of users
 Users may worry whether the games are manipulated or if their personal data is secure. Similarly, game developers face the challenge of ensuring trust in their platforms while combating potential hackers and cheaters.
 
 ## System Architecture
-![Image 0](./server/images/system.png)
+![Image 0](./client/public/system.png)
 
 ## Features
 To address these concerns, we introduce FairBET, a casino platform built with Nillion and Sign Protocol to enhance data privacy and foster trust. Currently, we offer two games: Roulette and Blackjack. Below are the key features we’ve integrated to ensure a fair and secure experience.
