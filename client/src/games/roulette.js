@@ -22,6 +22,7 @@ import Chat from '../components/Chat';
 import { ethers } from 'ethers';
 import tokenABI from "../ABI/tokenAbi.json"
 import { useStateContext } from '../context';
+import Back from '../components/back';
 
 class Roulette extends React.Component {
 
