@@ -1,101 +1,33 @@
-# FairBet
+# FairBET: A Casino Game Prioritizing User Trust and Data Privacy
 A decentralized roulette platform focused on ensuring fair play, privacy, and trust using Nillion and Sign protocol. 
 There are 2 parts to this projects:
 1. Securely play roulette and other casino games, with all computations happening securely and privately on Nillion
 2. Securely storing the hash of hardware ID of a user, so that banned user can't play from the same device
-## Usage
 
-### Option 1: Use Gitpod
-To run using gitpod, search this:
-```
-https://gitpod.io/new/#https://github.com/aaravm/eth-watchdog
-```
-### Option 2: Use Docker
-To run using docker:
-Step 1: Building the containers
-```
-docker build -t nillion-python-starter .
-```
-Step 2: Run the Docker Container:
-```
-docker run -it nillion-python-starter
-```
-To run the servers:
-```
-docker build -f Dockerfile.flask -t flask-app .
-docker run -p 5000:5000 flask-app
-```
+## Usage:
+On information on how to use this repository locally, check [docs](./docs/usage.md)
 
-### Option 3: Build Locally
-To run locally:
+## Motivation
+The online casino industry has grown significantly, attracting millions of users worldwide. However, with real money at stake, concerns about fairness and cheating often arise. 
+Users may worry whether the games are manipulated or if their personal data is secure. Similarly, game developers face the challenge of ensuring trust in their platforms while combating potential hackers and cheaters.
 
-Step 1: Clone the Repository
-Step 2: open the nillion-python-starter folder using:
-```
-cd nillion-python-starter/
-```
+## System Architecture
 
-Step 3: Install Nillion and its dependencies:
-```bash
-curl https://nilup.nilogy.xyz/install.sh | bash
-```
-```
-nilup install latest 
-nilup use latest 
-nilup init
-```
-For telemetry analysis of wattelk address
-```
-nilup instrumentation enable --wallet <your-eth-wallet-address>
-```
+## Features
+To address these concerns, we introduce FairBET, a casino platform built with Nillion and Sign Protocol to enhance data privacy and foster trust. Currently, we offer two games: Roulette and Blackjack. Below are the key features we’ve integrated to ensure a fair and secure experience.
 
-Install minimum python version
-```
-python3 --version
-python3 -m pip --version
-```
+Roulette Game
+In FairBET’s roulette, we’ve utilized Nillion to safeguard the user’s betting information. Here’s how it works:
 
-Create and activate virtual environment
-```
-python3 -m venv .venv
-source .venv/bin/activate
-```
+ - A user’s bet remains completely private, stored on Nillion’s decentralized network, inaccessible to anyone—including game administrators.
+Once the roulette wheel generates a result, it is sent to Nillion, which privately computes whether the user won or lost.
+The result is returned securely, without exposing any sensitive data. This ensures that neither the game makers nor external actors can influence the outcome, promoting fairness and transparency.
+Blackjack Game
+In FairBET’s blackjack, we address the common concern that the deck may be manipulated or that cards could be unfairly swapped:
 
-Install the requirements from .txt file in root
-```
-pip install --upgrade -r requirements.txt
-```
+ - We store the state of the card deck on Nillion. After every move, the platform verifies whether there has been any tampering with the deck.
+Additionally, Sign Protocol ensures that a user’s cards remain unchanged during gameplay. After each move, an attestation is generated, linking the current card sequence to the previous one. This cryptographic validation prevents any malicious activity from altering the cards, maintaining fairness throughout the game.
+Security Features Beyond the Games
 
-For compiling the nada file, run this in the same dir as nada.toml
-```
-nada build
-```
-
-Spinning up local devnet 
-```
-nillion-devnet
-```
-
-To run the client-code, go the respective directory and run: 
-```
-python3 <client-code>.py
-```
-
-## Casino
-Casino game with Nodejs/Express, ReactJs/Redux and HTML Canvas\
-You can play roulette, blackjack, slots, craps, poker (5 card draw and Texas Hold'em), keno and bet on races
-
-## Screenshot00 - The Splash screen
-![Image 0](./server/images/00.png)
-
-## Screenshot01 - The Salon
-![Image 1](./server/images/01.png)
-
-## Screenshot02 - Roulette wheel and panel user
-![Image 2](./server/images/02.png)
-
-## Screenshot03 - Roulette board and panel chat
-![Image 3](./server/images/03.png)
-
-## Screenshot04 - Poker Texas hold'em
-![Image 4](./server/images/04.png)
+- To further enhance platform security, we’ve implemented a ban functionality for user misconduct in the chatroom. If a user misbehaves, they receive up to three warnings. After that:<br>
+The system generates an attestation using Sign Protocol and permanently bans the user, preventing further logins.
