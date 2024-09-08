@@ -73,7 +73,15 @@ Spinning up local devnet
 nillion-devnet
 ```
 
-To run the client-code, go the respective directory and run: 
+To run the server.py file, go to the client_code directory and run: 
 ```
-python3 <client-code>.py
+python3 server.py
 ```
+Make sure that server would run at localhost:5000
+
+Go to the client directory , to run the application:
+```
+npm i --force
+npm run start
+```
+The app would be running at localhost:3000.
