@@ -38,3 +38,7 @@ FairBET is made with ReactJS for frontend and Python for backend using Nillion.
 - <b> Contracts: </b>
   - fairbetToken.sol : A custom ERC20 token created for users to play.
   - WhitelistManager.sol: This custom schema hook contract matches the current and previous attestation state and allows only game managers to create attestations.
+    
+## Schema IDs for Attestation
+- [Schema ID 0x249](https://testnet-scan.sign.global/schema/onchain_evm_84532_0x249)
+- [Schema ID 0x248](https://testnet-scan.sign.global/schema/onchain_evm_84532_0x248)
